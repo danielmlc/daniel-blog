@@ -1,0 +1,1 @@
+Astro.js is a modern static site builder ideal for content-focused websites like blogs. It achieves this by generating plain HTML, CSS, and JavaScript, embracing a static-first approach. This methodology generally results in excellent performance and strong SEO outcomes, as search engines can easily crawl and index the pre-rendered content.
