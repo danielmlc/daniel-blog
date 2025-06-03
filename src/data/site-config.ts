@@ -39,69 +39,60 @@ export type SiteConfig = {
 };
 
 const siteConfig: SiteConfig = {
-    website: 'https://example.com',
-    title: 'Dante',
-    subtitle: 'Minimal Astro.js theme',
-    description: 'Astro.js and Tailwind CSS theme for blog and portfolio by justgoodui.com',
-    image: {
-        src: '/dante-preview.jpg',
-        alt: 'Dante - Astro.js and Tailwind CSS theme'
+    website: 'https://danielmlc.top',
+    title: 'Danielmlc',
+    logo: {
+        src: '/favicon.ico',
     },
+    subtitle: 'daniel的博客',
+    description: '记录工作、生活、学习，分享技术、生活、感悟，有感而发，一起交流！',
     headerNavLinks: [
         {
-            text: 'Home',
+            text: '首页',
             href: '/'
         },
         {
-            text: 'Projects',
+            text: '项目',
             href: '/projects'
         },
         {
-            text: 'Blog',
+            text: '博客',
             href: '/blog'
         },
         {
-            text: 'Tags',
+            text: '分类',
             href: '/tags'
         }
     ],
     footerNavLinks: [
-        {
-            text: 'About',
+         {
+            text: '关于我',
             href: '/about'
         },
         {
-            text: 'Contact',
+            text: '联系',
             href: '/contact'
         },
         {
-            text: 'Terms',
+            text: '团队',
             href: '/terms'
-        },
-        {
-            text: 'Download theme',
-            href: 'https://github.com/JustGoodUI/dante-astro-theme'
         }
     ],
     socialLinks: [
-        {
-            text: 'Dribbble',
-            href: 'https://dribbble.com/'
+       {
+            text: 'github',
+            href: 'https://github.com/danielmlc'
         },
         {
-            text: 'Instagram',
-            href: 'https://instagram.com/'
-        },
-        {
-            text: 'X/Twitter',
-            href: 'https://twitter.com/'
+            text: 'bilibili',
+            href: 'https://space.bilibili.com/374721744/'
         }
     ],
     hero: {
         title: 'Hi There & Welcome to My Corner of the Web!',
-        text: "I'm **Ethan Donovan**, a web developer at Amazing Studio, dedicated to the realms of collaboration and artificial intelligence. My approach involves embracing intuition, conducting just enough research, and leveraging aesthetics as a catalyst for exceptional products. I have a profound appreciation for top-notch software, visual design, and the principles of product-led growth. Feel free to explore some of my coding endeavors on <a href='https://github.com/JustGoodUI/dante-astro-theme'>GitHub</a> or follow me on <a href='https://twitter.com/justgoodui'>Twitter/X</a>.",
+        text: "I'm **danielmlc**, a web developer at Amazing Studio, dedicated to the realms of collaboration and artificial intelligence. My approach involves embracing intuition, conducting just enough research, and leveraging aesthetics as a catalyst for exceptional products. I have a profound appreciation for top-notch software, visual design, and the principles of product-led growth. Feel free to explore some of my coding endeavors on <a href='https://github.com/JustGoodUI/dante-astro-theme'>GitHub</a> or follow me on <a href='https://twitter.com/justgoodui'>Twitter/X</a>.",
         image: {
-            src: '/hero.jpeg',
+            src: '/hero.png',
             alt: 'A person sitting at a desk in front of a computer'
         },
         actions: [
