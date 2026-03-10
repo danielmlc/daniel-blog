@@ -24,7 +24,7 @@ type Props = {
 };
 
 const { project, prevProject, nextProject } = Astro.props;
-const { title, description, seo } = project.data;
+const { title, description, demoUrl, repoUrl, seo } = project.data;
 const { Content } = await render(project);
 ---
 
@@ -32,6 +32,20 @@ const { Content } = await render(project);
     <article class="mb-16 sm:mb-24">
         <header class="mb-8">
             <h1 class="text-3xl leading-tight font-serif font-medium sm:text-5xl sm:leading-tight">{title}</h1>
+            {(demoUrl || repoUrl) && (
+                <div class="mt-4 flex flex-wrap gap-4 text-sm">
+                    {demoUrl && (
+                        <a class="inline-flex items-center justify-center px-4 py-1.5 font-serif italic border border-main rounded-full hover:bg-muted transition" href={demoUrl} target="_blank" rel="noopener noreferrer">
+                            在线演示
+                        </a>
+                    )}
+                    {repoUrl && (
+                        <a class="inline-flex items-center justify-center px-4 py-1.5 font-serif italic border border-main rounded-full hover:bg-muted transition" href={repoUrl} target="_blank" rel="noopener noreferrer">
+                            源码仓库
+                        </a>
+                    )}
+                </div>
+            )}
         </header>
         <div class="max-w-none prose sm:prose-lg">
             <Content />

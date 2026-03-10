@@ -1,0 +1,29 @@
+---
+import type { GetStaticPathsOptions, Page } from 'astro';
+import { type CollectionEntry, getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Pagination from '../../components/Pagination.astro';
+import NewsPreview from '../../components/NewsPreview.astro';
+import siteConfig from '../../data/site-config';
+import { sortItemsByDateDesc } from '../../utils/data-utils';
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+    const news = (await getCollection('news')).sort(sortItemsByDateDesc);
+    return paginate(news, { pageSize: siteConfig.newsPerPage || 8 });
+}
+
+type Props = { page: Page<CollectionEntry<'news'>> };
+
+const { page } = Astro.props;
+const newsList = page.data;
+---
+
+<BaseLayout
+    title="资讯"
+    description="科技生活资讯，关注前沿技术与日常生活"
+    showHeader={false}
+>
+    <h1 class="mb-12 text-2xl leading-tight font-serif italic sm:mb-16 sm:text-4xl">科技生活资讯</h1>
+    {newsList.map((news) => <NewsPreview news={news} class="mb-10 sm:mb-12" />)}
+    <Pagination page={page} class="my-16 sm:my-24" />
+</BaseLayout>

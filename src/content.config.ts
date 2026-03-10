@@ -26,6 +26,18 @@ const blog = defineCollection({
     })
 });
 
+const news = defineCollection({
+    loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/news' }),
+    schema: z.object({
+        title: z.string(),
+        excerpt: z.string().optional(),
+        publishDate: z.coerce.date(),
+        sourceUrl: z.string().optional(),
+        tags: z.array(z.string()).default([]),
+        seo: seoSchema.optional()
+    })
+});
+
 const pages = defineCollection({
     loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
     schema: z.object({
@@ -41,8 +53,10 @@ const projects = defineCollection({
         description: z.string().optional(),
         publishDate: z.coerce.date(),
         isFeatured: z.boolean().default(false),
+        demoUrl: z.string().optional(),
+        repoUrl: z.string().optional(),
         seo: seoSchema.optional()
     })
 });
 
-export const collections = { blog, pages, projects };
+export const collections = { blog, news, pages, projects };

@@ -35,6 +35,7 @@ export type SiteConfig = {
     hero?: Hero;
     subscribe?: Subscribe;
     postsPerPage?: number;
+    newsPerPage?: number;
     projectsPerPage?: number;
 };
 
@@ -52,12 +53,16 @@ const siteConfig: SiteConfig = {
             href: '/'
         },
         {
-            text: '项目',
-            href: '/projects'
+            text: '文章',
+            href: '/blog'
         },
         {
-            text: '博客',
-            href: '/blog'
+            text: '资讯',
+            href: '/news'
+        },
+        {
+            text: '项目',
+            href: '/projects'
         },
         {
             text: '分类',
@@ -108,6 +113,7 @@ const siteConfig: SiteConfig = {
         formUrl: '#'
     },
     postsPerPage: 8,
+    newsPerPage: 8,
     projectsPerPage: 8
 };
 

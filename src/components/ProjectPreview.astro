@@ -5,20 +5,36 @@ import ArrowRight from '../icons/ArrowRight.astro';
 type Props = { project: CollectionEntry<'projects'>; class?: string; headingLevel?: 'h2' | 'h3' };
 
 const { project, class: className, headingLevel = 'h2' } = Astro.props;
-const { title, description } = project.data;
+const { title, description, demoUrl, repoUrl } = project.data;
 const TitleTag = headingLevel;
 ---
 
-<a class:list={['flex justify-between items-start gap-8 group', className]} href={`/projects/${project.id}/`}>
+<div class:list={['flex justify-between items-start gap-8 group', className]}>
     <div class="grow">
-        <TitleTag
-            class="text-xl leading-tight font-serif font-medium group-hover:underline group-hover:decoration-dashed group-hover:underline-offset-4 group-hover:decoration-1 sm:text-2xl"
-        >
-            {title}
-        </TitleTag>
+        <a href={`/projects/${project.id}/`}>
+            <TitleTag
+                class="text-xl leading-tight font-serif font-medium group-hover:underline group-hover:decoration-dashed group-hover:underline-offset-4 group-hover:decoration-1 sm:text-2xl"
+            >
+                {title}
+            </TitleTag>
+        </a>
         {description && <div class="mt-1 text-sm leading-normal">{description}</div>}
+        {(demoUrl || repoUrl) && (
+            <div class="mt-2 flex flex-wrap gap-3 text-sm">
+                {demoUrl && (
+                    <a class="underline underline-offset-2 decoration-dashed hover:decoration-solid" href={demoUrl} target="_blank" rel="noopener noreferrer">
+                        在线演示
+                    </a>
+                )}
+                {repoUrl && (
+                    <a class="underline underline-offset-2 decoration-dashed hover:decoration-solid" href={repoUrl} target="_blank" rel="noopener noreferrer">
+                        源码仓库
+                    </a>
+                )}
+            </div>
+        )}
     </div>
-    <div class="hidden font-serif italic opacity-0 transition group-hover:opacity-100 sm:inline-flex sm:gap-1 sm:items-center sm:shrink-0">
-        View Project <ArrowRight class="fill-current w-4 h-4" />
-    </div>
-</a>
+    <a class="hidden font-serif italic opacity-0 transition group-hover:opacity-100 sm:inline-flex sm:gap-1 sm:items-center sm:shrink-0" href={`/projects/${project.id}/`}>
+        查看详情 <ArrowRight class="fill-current w-4 h-4" />
+    </a>
+</div>
