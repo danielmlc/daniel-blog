@@ -1,29 +1,240 @@
 ---
-import { marked } from 'marked';
 import siteConfig from '../data/site-config';
-import Button from './Button.astro';
+import quotes from '../data/quotes';
 
 const hero = siteConfig.hero;
+const weatherCity = hero?.weatherCity || 'Shenzhen';
+const quotesJson = JSON.stringify(quotes);
 ---
 
-{
-    (hero?.title || hero?.image?.src || hero?.text || (hero?.actions && hero.actions.length > 0)) && (
-        <section class="w-full flex flex-col gap-8 mb-16 sm:mb-24">
-            {hero.title && <h1 class="text-3xl leading-tight font-serif font-medium sm:text-5xl sm:leading-tight">{hero.title}</h1>}
-            {hero.image?.src && (
-                <figure>
-                    <img class="w-full" src={hero.image.src} loading="eager" decoding="async" alt={hero.image.alt || ''} width="768" height="432" />
-                    {hero.image.caption && <figcaption class="mt-1.5 text-xs sm:text-sm">{hero.image.caption}</figcaption>}
-                </figure>
-            )}
-            {hero.text && <div class="max-w-none prose sm:prose-lg" set:html={marked.parse(hero.text)} />}
-            {hero.actions && hero.actions.length > 0 && (
-                <div class="flex flex-wrap gap-4">
-                    {hero.actions.map((action) => (
-                        <Button href={action.href}>{action.text}</Button>
-                    ))}
+{hero && (
+    <section class="w-full mb-16 sm:mb-24 flex flex-col gap-4">
+        {/* Row 1: Profile + Date/Weather */}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Profile Card */}
+            <div class="p-6 border border-dashed border-main rounded-lg flex items-center gap-5">
+                {hero.avatar?.src && (
+                    <img
+                        class="w-16 h-16 rounded-full object-cover shrink-0"
+                        src={hero.avatar.src}
+                        alt={hero.avatar.alt || ''}
+                        width="64"
+                        height="64"
+                        loading="eager"
+                    />
+                )}
+                <div>
+                    {hero.name && (
+                        <h1 class="text-xl font-serif font-medium leading-tight sm:text-2xl">{hero.name}</h1>
+                    )}
+                    {hero.bio && (
+                        <p class="mt-1 text-sm leading-normal opacity-80">{hero.bio}</p>
+                    )}
                 </div>
-            )}
-        </section>
-    )
-}
+            </div>
+
+            {/* Date / Weather Card */}
+            <div class="p-6 border border-dashed border-main rounded-lg">
+                <div id="date-weather-card">
+                    <div class="text-lg font-serif font-medium" id="solar-date">--</div>
+                    <div class="mt-1 text-sm opacity-80" id="lunar-date">--</div>
+                    <div class="mt-3 text-sm opacity-80" id="weather-info">天气加载中...</div>
+                </div>
+            </div>
+        </div>
+
+        {/* Row 2: Daily Quote */}
+        <div class="p-6 border border-dashed border-main rounded-lg">
+            <blockquote class="font-serif italic text-base leading-relaxed sm:text-lg" id="daily-quote">
+                <span id="quote-text">...</span>
+                <footer class="mt-2 text-sm not-italic opacity-70">—— <cite id="quote-author"></cite></footer>
+            </blockquote>
+        </div>
+
+        {/* Row 3: Pet Area */}
+        <div class="p-6 border border-dashed border-main rounded-lg overflow-hidden" id="pet-area">
+            <div class="text-xs opacity-50 mb-3 font-serif italic">与小猫互动 · 移动鼠标试试</div>
+            <div class="relative h-32 sm:h-40" id="pet-container">
+                {/* Cat face - built with HTML/CSS */}
+                <div id="pet" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-700 ease-out">
+                    {/* Head */}
+                    <div class="relative w-20 h-16">
+                        {/* Ears */}
+                        <div class="absolute -top-3 left-1 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[12px] border-l-transparent border-r-transparent border-b-current opacity-60 rotate-[-10deg]"></div>
+                        <div class="absolute -top-3 right-1 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[12px] border-l-transparent border-r-transparent border-b-current opacity-60 rotate-[10deg]"></div>
+                        {/* Face */}
+                        <div class="w-20 h-16 rounded-[50%] border-2 border-current flex items-center justify-center gap-6 relative">
+                            {/* Eyes */}
+                            <div class="w-2.5 h-3 rounded-full bg-current relative" id="eye-left">
+                                <div class="w-1 h-1 rounded-full bg-main absolute top-0.5 left-0.5" id="pupil-left"></div>
+                            </div>
+                            <div class="w-2.5 h-3 rounded-full bg-current relative" id="eye-right">
+                                <div class="w-1 h-1 rounded-full bg-main absolute top-0.5 left-0.5" id="pupil-right"></div>
+                            </div>
+                            {/* Nose */}
+                            <div class="absolute bottom-3.5 left-1/2 -translate-x-1/2 w-1.5 h-1 rounded-full bg-current opacity-50"></div>
+                            {/* Mouth */}
+                            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-4 h-2 border-b border-current rounded-b-full opacity-40" id="pet-mouth"></div>
+                        </div>
+                    </div>
+                    {/* Body hint */}
+                    <div class="mx-auto w-12 h-3 border-x-2 border-current opacity-30 rounded-b-lg"></div>
+                </div>
+                {/* Speech bubble */}
+                <div id="pet-speech" class="absolute top-2 right-4 sm:right-8 text-xs opacity-0 transition-opacity duration-300 px-3 py-1.5 border border-dashed border-current rounded-lg font-serif">
+                    喵~
+                </div>
+            </div>
+        </div>
+    </section>
+)}
+
+<script define:vars={{ quotesJson, weatherCity }}>
+    const quotes = JSON.parse(quotesJson);
+
+    function initHero() {
+        initDate();
+        initQuote();
+        initWeather();
+        initPet();
+    }
+
+    // === Date & Lunar Calendar ===
+    function initDate() {
+        const now = new Date();
+        const solarEl = document.getElementById('solar-date');
+        const lunarEl = document.getElementById('lunar-date');
+        if (!solarEl || !lunarEl) return;
+
+        const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+        solarEl.textContent = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 星期${weekdays[now.getDay()]}`;
+
+        try {
+            const lunarStr = new Intl.DateTimeFormat('zh-CN-u-ca-chinese', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            }).format(now);
+            lunarEl.textContent = `农历 ${lunarStr}`;
+        } catch {
+            lunarEl.textContent = '';
+        }
+    }
+
+    // === Weather (wttr.in, free, no API key) ===
+    function initWeather() {
+        const el = document.getElementById('weather-info');
+        if (!el) return;
+
+        const cached = sessionStorage.getItem('weather-cache');
+        if (cached) {
+            try {
+                const data = JSON.parse(cached);
+                if (Date.now() - data.ts < 1800000) {
+                    el.textContent = data.text;
+                    return;
+                }
+            } catch {}
+        }
+
+        fetch(`https://wttr.in/${weatherCity}?format=%t+%C&lang=zh`)
+            .then(res => res.text())
+            .then(text => {
+                const result = `${text.trim()} · ${weatherCity}`;
+                el.textContent = result;
+                sessionStorage.setItem('weather-cache', JSON.stringify({ text: result, ts: Date.now() }));
+            })
+            .catch(() => {
+                el.textContent = `${weatherCity}`;
+            });
+    }
+
+    // === Daily Quote (same quote per day) ===
+    function initQuote() {
+        const textEl = document.getElementById('quote-text');
+        const authorEl = document.getElementById('quote-author');
+        if (!textEl || !authorEl || !quotes.length) return;
+
+        const today = new Date();
+        const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+        const index = seed % quotes.length;
+        const quote = quotes[index];
+
+        textEl.textContent = `「${quote.text}」`;
+        authorEl.textContent = quote.author;
+    }
+
+    // === Pet Interaction ===
+    function initPet() {
+        const container = document.getElementById('pet-container');
+        const pet = document.getElementById('pet');
+        const pupilL = document.getElementById('pupil-left');
+        const pupilR = document.getElementById('pupil-right');
+        const speech = document.getElementById('pet-speech');
+        const mouth = document.getElementById('pet-mouth');
+        if (!container || !pet || !pupilL || !pupilR) return;
+
+        // Idle animation
+        let breathDir = 1;
+        let breathVal = 0;
+        function idle() {
+            breathVal += 0.02 * breathDir;
+            if (breathVal > 1) breathDir = -1;
+            if (breathVal < 0) breathDir = 1;
+            const y = Math.sin(breathVal * Math.PI) * 3;
+            pet.style.marginTop = `${y}px`;
+            requestAnimationFrame(idle);
+        }
+        idle();
+
+        // Eye tracking
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dx = (e.clientX - cx) / rect.width;
+            const dy = (e.clientY - cy) / rect.height;
+            const maxMove = 2;
+            const px = Math.max(-maxMove, Math.min(maxMove, dx * 4));
+            const py = Math.max(-maxMove, Math.min(maxMove, dy * 4));
+            pupilL.style.transform = `translate(${px}px, ${py}px)`;
+            pupilR.style.transform = `translate(${px}px, ${py}px)`;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            pupilL.style.transform = '';
+            pupilR.style.transform = '';
+        });
+
+        // Click reaction
+        const reactions = ['喵~', '(=^・^=)', '摸摸我~', 'zzZ...', '喵呜!', '嗯？'];
+        container.addEventListener('click', () => {
+            if (!speech) return;
+            const msg = reactions[Math.floor(Math.random() * reactions.length)];
+            speech.textContent = msg;
+            speech.style.opacity = '1';
+
+            // Blink
+            if (pupilL.parentElement && pupilR.parentElement) {
+                pupilL.parentElement.style.height = '1px';
+                pupilR.parentElement.style.height = '1px';
+                setTimeout(() => {
+                    pupilL.parentElement.style.height = '';
+                    pupilR.parentElement.style.height = '';
+                }, 200);
+            }
+
+            // Bounce
+            pet.style.transform = 'translate(-50%, -50%) scale(1.1)';
+            setTimeout(() => {
+                pet.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 200);
+
+            setTimeout(() => {
+                speech.style.opacity = '0';
+            }, 2000);
+        });
+    }
+
+    // Init on page load (supports Astro view transitions)
+    initHero();
+    document.addEventListener('astro:page-load', initHero);
+</script>

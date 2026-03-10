@@ -10,10 +10,10 @@ export type Link = {
 };
 
 export type Hero = {
-    title?: string;
-    text?: string;
-    image?: Image;
-    actions?: Link[];
+    name?: string;
+    avatar?: Image;
+    bio?: string;
+    weatherCity?: string;
 };
 
 export type Subscribe = {
@@ -94,18 +94,13 @@ const siteConfig: SiteConfig = {
         }
     ],
     hero: {
-        title: 'Hi There & Welcome to My Corner of the Web!',
-        text: "I'm **danielmlc**, a web developer at Amazing Studio, dedicated to the realms of collaboration and artificial intelligence. My approach involves embracing intuition, conducting just enough research, and leveraging aesthetics as a catalyst for exceptional products. I have a profound appreciation for top-notch software, visual design, and the principles of product-led growth. Feel free to explore some of my coding endeavors on <a href='https://github.com/JustGoodUI/dante-astro-theme'>GitHub</a> or follow me on <a href='https://twitter.com/justgoodui'>Twitter/X</a>.",
-        image: {
+        name: 'Danielmlc',
+        avatar: {
             src: '/hero.png',
-            alt: 'A person sitting at a desk in front of a computer'
+            alt: 'danielmlc 的头像'
         },
-        actions: [
-            {
-                text: 'Get in Touch',
-                href: '/contact'
-            }
-        ]
+        bio: '一个热爱技术与生活的开发者，记录工作、学习与日常的点滴。',
+        weatherCity: 'Shenzhen'
     },
     subscribe: {
         title: 'Subscribe to Dante Newsletter',
