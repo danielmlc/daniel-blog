@@ -1,0 +1,300 @@
+---
+// RoamingPet.astro - Global roaming cat for all pages
+---
+
+<div
+    id="rp-root"
+    aria-hidden="true"
+    style="position:fixed;z-index:9998;left:-120px;top:50%;opacity:0;pointer-events:none;transition:left 2.5s cubic-bezier(.4,0,.2,1),top 2.5s cubic-bezier(.4,0,.2,1),opacity 0.8s ease;user-select:none;"
+>
+    <div id="rp-inner" style="pointer-events:auto;cursor:pointer;position:relative;" title="摸摸我~">
+        <!-- Speech bubble -->
+        <div
+            id="rp-speech"
+            class="bg-main shadow-sm"
+            style="position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);font-size:0.7rem;opacity:0;transition:opacity 0.3s ease;padding:3px 10px;border:1px solid currentColor;border-radius:10px 10px 10px 0;white-space:nowrap;font-style:italic;pointer-events:none;font-family:serif;"
+        >
+            喵~
+        </div>
+        <!-- Cat body -->
+        <div id="rp-cat" style="position:relative;">
+            <!-- Head -->
+            <div style="position:relative;width:64px;height:48px;">
+                <!-- Left ear -->
+                <div style="position:absolute;top:-9px;left:5px;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:9px solid currentColor;opacity:0.65;transform:rotate(-10deg);"></div>
+                <!-- Right ear -->
+                <div style="position:absolute;top:-9px;right:5px;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:9px solid currentColor;opacity:0.65;transform:rotate(10deg);"></div>
+                <!-- Face -->
+                <div class="bg-main" style="width:64px;height:48px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;gap:14px;position:relative;">
+                    <!-- Left eye -->
+                    <div id="rp-eye-l" style="width:8px;height:10px;border-radius:50%;background:currentColor;position:relative;transition:height 0.1s,transform 0.2s;">
+                        <div id="rp-pupil-l" class="bg-main" style="width:4px;height:4px;border-radius:50%;position:absolute;top:2px;left:1px;transition:transform 0.08s linear;"></div>
+                    </div>
+                    <!-- Right eye -->
+                    <div id="rp-eye-r" style="width:8px;height:10px;border-radius:50%;background:currentColor;position:relative;transition:height 0.1s,transform 0.2s;">
+                        <div id="rp-pupil-r" class="bg-main" style="width:4px;height:4px;border-radius:50%;position:absolute;top:2px;left:1px;transition:transform 0.08s linear;"></div>
+                    </div>
+                    <!-- Nose -->
+                    <div style="position:absolute;bottom:11px;left:50%;transform:translateX(-50%);width:5px;height:3px;border-radius:50%;background:currentColor;opacity:0.5;"></div>
+                    <!-- Mouth -->
+                    <div id="rp-mouth" style="position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:14px;height:7px;border-bottom:1px solid currentColor;border-radius:0 0 50% 50%;opacity:0.4;transition:all 0.25s ease;"></div>
+                </div>
+            </div>
+            <!-- Body stub -->
+            <div style="margin:0 auto;width:36px;height:8px;border-left:2px solid currentColor;border-right:2px solid currentColor;opacity:0.3;border-radius:0 0 8px 8px;"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes rp-float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-4px); }
+    }
+    @keyframes rp-nod {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        20% { transform: translateY(-10px) rotate(-6deg); }
+        40% { transform: translateY(2px) rotate(0deg); }
+        65% { transform: translateY(-6px) rotate(4deg); }
+        80% { transform: translateY(0) rotate(0deg); }
+    }
+    @keyframes rp-spin {
+        0% { transform: rotate(0deg) scale(1); }
+        50% { transform: rotate(180deg) scale(1.1); }
+        100% { transform: rotate(360deg) scale(1); }
+    }
+    @keyframes rp-bounce {
+        0%, 100% { transform: translateY(0) scale(1); }
+        30% { transform: translateY(-14px) scale(1.12); }
+        55% { transform: translateY(-6px) scale(1.06); }
+        75% { transform: translateY(-10px) scale(1.09); }
+    }
+    @keyframes rp-wave {
+        0%, 100% { transform: rotate(0deg) translateX(0); }
+        20% { transform: rotate(-12deg) translateX(-5px); }
+        50% { transform: rotate(12deg) translateX(5px); }
+        70% { transform: rotate(-8deg) translateX(-3px); }
+    }
+    @keyframes rp-tremble {
+        0%, 100% { transform: translateX(0) rotate(0); }
+        15% { transform: translateX(-4px) rotate(-4deg); }
+        35% { transform: translateX(4px) rotate(4deg); }
+        55% { transform: translateX(-3px) rotate(-2deg); }
+        75% { transform: translateX(3px) rotate(2deg); }
+    }
+    @keyframes rp-shy {
+        0%, 100% { transform: translateY(0) rotate(0); }
+        40% { transform: translateY(-3px) rotate(-15deg); }
+        60% { transform: translateY(-3px) rotate(-15deg); }
+    }
+
+    #rp-cat.rp-float { animation: rp-float 2.8s ease-in-out infinite; }
+    #rp-cat.rp-nod   { animation: rp-nod 0.9s ease-in-out; }
+    #rp-cat.rp-spin  { animation: rp-spin 0.6s ease-in-out; }
+    #rp-cat.rp-bounce { animation: rp-bounce 0.55s ease-in-out 2; }
+    #rp-cat.rp-wave  { animation: rp-wave 0.55s ease-in-out 3; }
+    #rp-cat.rp-tremble { animation: rp-tremble 0.4s ease-in-out 2; }
+    #rp-cat.rp-shy   { animation: rp-shy 0.6s ease-in-out 2; }
+</style>
+
+<script>
+    (function () {
+        // Guard: only init once across SPA navigations
+        if ((window as any).__rpInit) return;
+        (window as any).__rpInit = true;
+
+        const root = document.getElementById('rp-root') as HTMLElement | null;
+        const inner = document.getElementById('rp-inner') as HTMLElement | null;
+        const cat = document.getElementById('rp-cat') as HTMLElement | null;
+        const speech = document.getElementById('rp-speech') as HTMLElement | null;
+        const eyeL = document.getElementById('rp-eye-l') as HTMLElement | null;
+        const eyeR = document.getElementById('rp-eye-r') as HTMLElement | null;
+        const pupilL = document.getElementById('rp-pupil-l') as HTMLElement | null;
+        const pupilR = document.getElementById('rp-pupil-r') as HTMLElement | null;
+        const mouth = document.getElementById('rp-mouth') as HTMLElement | null;
+
+        if (!root || !cat || !inner) return;
+
+        let isVisible = false;
+        let interacting = false;
+        let wanderTimer = 0;
+        let appearTimer = 0;
+        let speechTimer = 0;
+
+        // Generate a position along one of the four viewport edges
+        function safePos() {
+            const edge = Math.floor(Math.random() * 4);
+            switch (edge) {
+                case 0: return { x: 1,  y: 14 + Math.random() * 70 }; // left edge
+                case 1: return { x: 88, y: 14 + Math.random() * 70 }; // right edge
+                case 2: return { x: 8 + Math.random() * 76, y: 10 };  // top edge (below nav)
+                case 3: return { x: 8 + Math.random() * 76, y: 87 };  // bottom edge
+                default: return { x: 1, y: 50 };
+            }
+        }
+
+        function teleportTo(x: number, y: number) {
+            root.style.transition = 'opacity 0.8s ease';
+            root.style.left = `${x}vw`;
+            root.style.top = `${y}vh`;
+        }
+
+        function walkTo(x: number, y: number) {
+            root.style.transition =
+                'left 2.5s cubic-bezier(.4,0,.2,1), top 2.5s cubic-bezier(.4,0,.2,1), opacity 0.8s ease';
+            root.style.left = `${x}vw`;
+            root.style.top = `${y}vh`;
+        }
+
+        function show() {
+            const { x, y } = safePos();
+            teleportTo(x, y);
+            root.style.opacity = '1';
+            isVisible = true;
+            setCatAnim('rp-float');
+            scheduleWander();
+        }
+
+        function hide() {
+            root.style.opacity = '0';
+            isVisible = false;
+            clearTimeout(wanderTimer);
+            setCatAnim('');
+            // Reappear after 25–55 seconds
+            appearTimer = window.setTimeout(show, 25000 + Math.random() * 30000);
+        }
+
+        function wander() {
+            if (!isVisible || interacting) {
+                scheduleWander();
+                return;
+            }
+            const { x, y } = safePos();
+            walkTo(x, y);
+            // 20% chance to vanish shortly after arriving
+            if (Math.random() < 0.2) {
+                window.setTimeout(() => { if (isVisible) hide(); }, 4000 + Math.random() * 4000);
+            } else {
+                scheduleWander();
+            }
+        }
+
+        function scheduleWander() {
+            clearTimeout(wanderTimer);
+            wanderTimer = window.setTimeout(wander, 14000 + Math.random() * 18000);
+        }
+
+        // First appearance after 4–9 seconds
+        appearTimer = window.setTimeout(show, 4000 + Math.random() * 5000);
+
+        // ── Animation helpers ─────────────────────────────────────
+        const animDur: Record<string, number> = {
+            'rp-nod': 900, 'rp-spin': 600, 'rp-bounce': 1100,
+            'rp-wave': 1650, 'rp-tremble': 800, 'rp-shy': 1200,
+        };
+
+        function setCatAnim(name: string) {
+            cat.className = name ? `rp-cat ${name}` : 'rp-cat';
+            // Re-trigger animation by forcing reflow
+            void cat.offsetWidth;
+        }
+
+        function playAnim(name: string) {
+            setCatAnim(name);
+            window.setTimeout(() => setCatAnim('rp-float'), animDur[name] ?? 1000);
+        }
+
+        // ── Expression helpers ────────────────────────────────────
+        function say(msg: string, duration = 2200) {
+            if (!speech) return;
+            clearTimeout(speechTimer);
+            speech.textContent = msg;
+            speech.style.opacity = '1';
+            speechTimer = window.setTimeout(() => { speech.style.opacity = '0'; }, duration);
+        }
+
+        function blink() {
+            if (!eyeL || !eyeR) return;
+            eyeL.style.height = '1px';
+            eyeR.style.height = '1px';
+            window.setTimeout(() => { eyeL.style.height = ''; eyeR.style.height = ''; }, 180);
+        }
+
+        function squint(dur = 1800) {
+            if (!eyeL || !eyeR) return;
+            eyeL.style.height = '2px';
+            eyeR.style.height = '2px';
+            window.setTimeout(() => { eyeL.style.height = ''; eyeR.style.height = ''; }, dur);
+        }
+
+        function bigEyes(dur = 900) {
+            if (!eyeL || !eyeR) return;
+            eyeL.style.transform = 'scale(1.6)';
+            eyeR.style.transform = 'scale(1.6)';
+            window.setTimeout(() => { eyeL.style.transform = ''; eyeR.style.transform = ''; }, dur);
+        }
+
+        function bigSmile(dur = 2000) {
+            if (!mouth) return;
+            mouth.style.width = '22px';
+            mouth.style.height = '10px';
+            mouth.style.borderBottomWidth = '2px';
+            mouth.style.opacity = '0.7';
+            window.setTimeout(() => {
+                mouth.style.width = '';
+                mouth.style.height = '';
+                mouth.style.borderBottomWidth = '';
+                mouth.style.opacity = '';
+            }, dur);
+        }
+
+        function dash() {
+            const { x, y } = safePos();
+            root.style.transition =
+                'left 0.5s cubic-bezier(.4,0,.2,1), top 0.5s cubic-bezier(.4,0,.2,1), opacity 0.8s ease';
+            root.style.left = `${x}vw`;
+            root.style.top = `${y}vh`;
+        }
+
+        // ── Interaction catalogue ─────────────────────────────────
+        const interactions = [
+            () => { playAnim('rp-nod'); say('嗯嗯~'); },
+            () => { bigSmile(2000); squint(2000); playAnim('rp-bounce'); say('(≧▽≦)'); },
+            () => { playAnim('rp-spin'); say('(=^・ω・^=)'); },
+            () => { playAnim('rp-wave'); say('摸摸我~'); },
+            () => { bigEyes(900); playAnim('rp-tremble'); say('！？'); },
+            () => { squint(2500); say('zzZ...'); },
+            () => { say('(=ↀωↀ=)✧'); window.setTimeout(dash, 300); },
+            () => { playAnim('rp-bounce'); say('喵呜!'); },
+            () => { blink(); playAnim('rp-nod'); say('喵~'); },
+            () => { bigSmile(1500); say('(=^・^=)'); },
+            () => { playAnim('rp-shy'); say('害羞...'); squint(1200); },
+        ];
+
+        let lastIdx = -1;
+        inner.addEventListener('click', () => {
+            if (interacting) return;
+            interacting = true;
+            blink();
+            let idx: number;
+            do { idx = Math.floor(Math.random() * interactions.length); }
+            while (idx === lastIdx && interactions.length > 1);
+            lastIdx = idx;
+            interactions[idx]();
+            window.setTimeout(() => { interacting = false; }, 1600);
+        });
+
+        // ── Global eye tracking ───────────────────────────────────
+        document.addEventListener('mousemove', (e) => {
+            if (!isVisible || !pupilL || !pupilR) return;
+            const rect = inner.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const maxM = 2;
+            const px = Math.max(-maxM, Math.min(maxM, (e.clientX - cx) / 60));
+            const py = Math.max(-maxM, Math.min(maxM, (e.clientY - cy) / 60));
+            pupilL.style.transform = `translate(${px}px, ${py}px)`;
+            pupilR.style.transform = `translate(${px}px, ${py}px)`;
+        });
+    })();
+</script>

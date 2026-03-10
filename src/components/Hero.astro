@@ -102,49 +102,6 @@ const quotesJson = JSON.stringify(quotes);
                 </div>
             </div>
 
-            {/* Pet Area (Floating Bottom Right) */}
-            <div class="w-full flex justify-end mt-8 sm:mt-12" id="pet-area">
-                <div class="relative h-24 sm:h-32 w-40 cursor-pointer group" id="pet-container" title="摸摸小猫">
-                    <div class="absolute -top-4 right-1/2 translate-x-1/2 text-xs opacity-0 group-hover:opacity-50 transition-opacity duration-300 font-serif italic whitespace-nowrap">
-                        与小猫互动 · 移动鼠标
-                    </div>
-                    {/* Cat face - built with HTML/CSS */}
-                    <div id="pet" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-700 ease-out z-10">
-                        {/* Head */}
-                        <div class="relative w-20 h-16">
-                            {/* Ears */}
-                            <div class="absolute -top-3 left-1 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[12px] border-l-transparent border-r-transparent border-b-current opacity-60 rotate-[-10deg]" />
-                            <div class="absolute -top-3 right-1 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[12px] border-l-transparent border-r-transparent border-b-current opacity-60 rotate-[10deg]" />
-                            {/* Face */}
-                            <div class="w-20 h-16 rounded-[50%] border-2 border-current flex items-center justify-center gap-6 relative bg-main">
-                                {/* Eyes */}
-                                <div class="w-2.5 h-3 rounded-full bg-current relative" id="eye-left">
-                                    <div class="w-1 h-1 rounded-full bg-main absolute top-0.5 left-0.5" id="pupil-left" />
-                                </div>
-                                <div class="w-2.5 h-3 rounded-full bg-current relative" id="eye-right">
-                                    <div class="w-1 h-1 rounded-full bg-main absolute top-0.5 left-0.5" id="pupil-right" />
-                                </div>
-                                {/* Nose */}
-                                <div class="absolute bottom-3.5 left-1/2 -translate-x-1/2 w-1.5 h-1 rounded-full bg-current opacity-50" />
-                                {/* Mouth */}
-                                <div
-                                    class="absolute bottom-2 left-1/2 -translate-x-1/2 w-4 h-2 border-b border-current rounded-b-full opacity-40"
-                                    id="pet-mouth"
-                                />
-                            </div>
-                        </div>
-                        {/* Body hint */}
-                        <div class="mx-auto w-12 h-3 border-x-2 border-current opacity-30 rounded-b-lg" />
-                    </div>
-                    {/* Speech bubble */}
-                    <div
-                        id="pet-speech"
-                        class="absolute -top-2 right-4 z-20 text-xs opacity-0 transition-opacity duration-300 px-3 py-1.5 border border-current rounded-2xl rounded-br-sm font-serif bg-main shadow-sm"
-                    >
-                        喵~
-                    </div>
-                </div>
-            </div>
         </section>
     )
 }
@@ -156,7 +113,6 @@ const quotesJson = JSON.stringify(quotes);
         initDate();
         initQuote();
         initWeather();
-        initPet();
     }
 
     // === Date & Lunar Calendar ===
@@ -222,78 +178,6 @@ const quotesJson = JSON.stringify(quotes);
 
         textEl.textContent = `「${quote.text}」`;
         authorEl.textContent = quote.author;
-    }
-
-    // === Pet Interaction ===
-    function initPet() {
-        const container = document.getElementById('pet-container');
-        const pet = document.getElementById('pet');
-        const pupilL = document.getElementById('pupil-left');
-        const pupilR = document.getElementById('pupil-right');
-        const speech = document.getElementById('pet-speech');
-        const mouth = document.getElementById('pet-mouth');
-        if (!container || !pet || !pupilL || !pupilR) return;
-
-        // Idle animation
-        let breathDir = 1;
-        let breathVal = 0;
-        function idle() {
-            breathVal += 0.02 * breathDir;
-            if (breathVal > 1) breathDir = -1;
-            if (breathVal < 0) breathDir = 1;
-            const y = Math.sin(breathVal * Math.PI) * 3;
-            pet.style.marginTop = `${y}px`;
-            requestAnimationFrame(idle);
-        }
-        idle();
-
-        // Eye tracking
-        container.addEventListener('mousemove', (e) => {
-            const rect = container.getBoundingClientRect();
-            const cx = rect.left + rect.width / 2;
-            const cy = rect.top + rect.height / 2;
-            const dx = (e.clientX - cx) / rect.width;
-            const dy = (e.clientY - cy) / rect.height;
-            const maxMove = 2;
-            const px = Math.max(-maxMove, Math.min(maxMove, dx * 4));
-            const py = Math.max(-maxMove, Math.min(maxMove, dy * 4));
-            pupilL.style.transform = `translate(${px}px, ${py}px)`;
-            pupilR.style.transform = `translate(${px}px, ${py}px)`;
-        });
-
-        container.addEventListener('mouseleave', () => {
-            pupilL.style.transform = '';
-            pupilR.style.transform = '';
-        });
-
-        // Click reaction
-        const reactions = ['喵~', '(=^・^=)', '摸摸我~', 'zzZ...', '喵呜!', '嗯？'];
-        container.addEventListener('click', () => {
-            if (!speech) return;
-            const msg = reactions[Math.floor(Math.random() * reactions.length)];
-            speech.textContent = msg;
-            speech.style.opacity = '1';
-
-            // Blink
-            if (pupilL.parentElement && pupilR.parentElement) {
-                pupilL.parentElement.style.height = '1px';
-                pupilR.parentElement.style.height = '1px';
-                setTimeout(() => {
-                    pupilL.parentElement.style.height = '';
-                    pupilR.parentElement.style.height = '';
-                }, 200);
-            }
-
-            // Bounce
-            pet.style.transform = 'translate(-50%, -50%) scale(1.1)';
-            setTimeout(() => {
-                pet.style.transform = 'translate(-50%, -50%) scale(1)';
-            }, 200);
-
-            setTimeout(() => {
-                speech.style.opacity = '0';
-            }, 2000);
-        });
     }
 
     // Init on page load (supports Astro view transitions)

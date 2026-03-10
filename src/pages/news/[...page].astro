@@ -1,10 +1,10 @@
 ---
 import type { GetStaticPathsOptions, Page } from 'astro';
 import { type CollectionEntry, getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Pagination from '../../components/Pagination.astro';
 import NewsPreview from '../../components/NewsPreview.astro';
+import Pagination from '../../components/Pagination.astro';
 import siteConfig from '../../data/site-config';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import { sortItemsByDateDesc } from '../../utils/data-utils';
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
@@ -18,12 +18,14 @@ const { page } = Astro.props;
 const newsList = page.data;
 ---
 
-<BaseLayout
-    title="资讯"
-    description="科技生活资讯，关注前沿技术与日常生活"
-    showHeader={false}
->
-    <h1 class="mb-12 text-2xl leading-tight font-serif italic sm:mb-16 sm:text-4xl">科技生活资讯</h1>
+<BaseLayout title="科技动态" description="记录值得关注的科技前沿、数字生活资讯与灵感。" showHeader={false}>
+    <div class="mb-12 sm:mb-16">
+        <div class="text-sm font-medium text-main/50 mb-4 tracking-widest flex items-center gap-2">
+            <span>资讯</span>
+            <span class="w-8 h-[1px] bg-main/20"></span>
+        </div>
+        <h1 class="text-3xl leading-tight font-serif font-bold sm:text-4xl text-main">科技动态</h1>
+    </div>
     {newsList.map((news) => <NewsPreview news={news} class="mb-10 sm:mb-12" />)}
     <Pagination page={page} class="my-16 sm:my-24" />
 </BaseLayout>

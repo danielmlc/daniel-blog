@@ -1,6 +1,6 @@
 ---
-import Button from './Button.astro';
 import siteConfig from '../data/site-config';
+import Button from './Button.astro';
 
 const subscribe = siteConfig.subscribe;
 
@@ -9,7 +9,12 @@ const { class: className } = Astro.props;
 
 {
     subscribe?.formUrl && (
-        <section class:list={['px-8 py-12 flex flex-col items-center border border-dashed border-main text-center sm:px-12 sm:py-16', className]}>
+        <section
+            class:list={[
+                'px-8 py-12 flex flex-col items-center border border-dashed border-main/30 bg-main/5 text-center sm:px-12 sm:py-16 rounded-xl hover:border-main/50 transition-colors',
+                className
+            ]}
+        >
             {subscribe.title && (
                 <h2 class:list={['w-full max-w-xl text-2xl leading-tight font-serif font-medium sm:text-4xl', subscribe.text ? 'mb-4' : 'mb-8']}>
                     {subscribe.title}
@@ -25,7 +30,7 @@ const { class: className } = Astro.props;
                 target="_blank"
             >
                 <label for="email" class="sr-only">
-                    Email Address
+                    电子邮箱
                 </label>
                 <input
                     type="email"
@@ -34,10 +39,10 @@ const { class: className } = Astro.props;
                     class="w-full h-9 px-5 py-2 text-sm text-main bg-transparent border border-main rounded-full placeholder:text-main/60 focus:outline-hidden"
                     required=""
                     value=""
-                    placeholder="Your email"
+                    placeholder="您的邮箱地址"
                 />
                 <Button type="submit" name="subscribe" class="w-full h-9 sm:w-auto">
-                    Subscribe
+                    订阅
                 </Button>
             </form>
         </section>

@@ -12,19 +12,19 @@ const { page, class: className } = Astro.props;
             <IconButton
                 class="absolute left-0 top-1/2 -translate-y-1/2"
                 href={page.url.prev}
-                aria-label={`Go to page ${page.currentPage - 1} of ${page.lastPage}`}
+                aria-label={`前往第 ${page.currentPage - 1} 页，共 ${page.lastPage} 页`}
             >
                 <ArrowLeft class="w-5 h-5 fill-current" />
             </IconButton>
         )
     }
-    <span class="text-sm" aria-current="page">Page {page.currentPage} of {page.lastPage}</span>
+    <span class="text-sm font-serif text-main/60 tracking-wider" aria-current="page">第 {page.currentPage} 页 / 共 {page.lastPage} 页</span>
     {
         page.url.next && (
             <IconButton
                 class="absolute right-0 top-1/2 -translate-y-1/2"
                 href={page.url.next}
-                aria-label={`Go to page ${page.currentPage + 1} of ${page.lastPage}`}
+                aria-label={`前往第 ${page.currentPage + 1} 页，共 ${page.lastPage} 页`}
             >
                 <ArrowRight class="w-5 h-5 fill-current" />
             </IconButton>

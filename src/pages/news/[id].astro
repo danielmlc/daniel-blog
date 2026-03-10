@@ -34,11 +34,18 @@ const { Content } = await render(news);
             <h1 class="text-3xl leading-tight font-serif font-medium sm:text-5xl sm:leading-tight">{title}</h1>
             <div class="mt-4 text-sm">
                 <FormattedDate date={publishDate} />
-                {sourceUrl && (
-                    <a class="ml-2 underline underline-offset-2 decoration-dashed hover:decoration-solid" href={sourceUrl} target="_blank" rel="noopener noreferrer">
-                        查看原文
-                    </a>
-                )}
+                {
+                    sourceUrl && (
+                        <a
+                            class="ml-2 underline underline-offset-2 decoration-dashed hover:decoration-solid"
+                            href={sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            查看原文
+                        </a>
+                    )
+                }
             </div>
         </header>
         <div class="max-w-none prose sm:prose-lg">
@@ -56,7 +63,7 @@ const { Content } = await render(news);
                     </div>
                 )
             }
-            <Button class="copy-url-button" aria-label="Copy link" data-url={href} data-tooltip-default="Copy link" data-tooltip-success="Copied">分享</Button>
+            <Button class="copy-url-button" aria-label="复制链接" data-url={href} data-tooltip-default="复制链接" data-tooltip-success="已复制">分享</Button>
         </div>
     </article>
     {
@@ -83,7 +90,7 @@ const { Content } = await render(news);
 
             await navigator.clipboard.writeText(url);
 
-            button.innerText = 'Copied';
+            button.innerText = '已复制';
 
             setTimeout(() => {
                 button.innerText = label;

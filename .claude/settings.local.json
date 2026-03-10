@@ -4,7 +4,9 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git config:*)",
-      "Bash(npx astro:*)"
+      "Bash(npx astro:*)",
+      "Bash(pnpm build:*)",
+      "WebFetch(domain:hacker-news.firebaseio.com)"
     ]
   }
 }

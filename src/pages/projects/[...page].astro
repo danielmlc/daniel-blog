@@ -1,10 +1,10 @@
 ---
 import type { GetStaticPathsOptions, Page } from 'astro';
 import { type CollectionEntry, getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
 import Pagination from '../../components/Pagination.astro';
 import ProjectPreview from '../../components/ProjectPreview.astro';
 import siteConfig from '../../data/site-config';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import { sortItemsByDateDesc } from '../../utils/data-utils';
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
@@ -19,12 +19,18 @@ const portfolio = page.data;
 ---
 
 <BaseLayout
-    title="Portfolio"
-    description="Explore a diverse portfolio showcasing my passion and expertise"
-    image={{ src: '/dante-preview.jpg', alt: 'The preview of the site' }}
+    title="项目集合"
+    description="浏览我的独立开发项目、开源贡献片段与有趣的作品展示。"
+    image={{ src: '/dante-preview.jpg', alt: '项目的预览卡片' }}
     showHeader={false}
 >
-    <h1 class="mb-12 text-2xl leading-tight font-serif italic sm:mb-16 sm:text-4xl">Projects</h1>
+    <div class="mb-12 sm:mb-16">
+        <div class="text-sm font-medium text-main/50 mb-4 tracking-widest flex items-center gap-2">
+            <span>作品</span>
+            <span class="w-8 h-[1px] bg-main/20"></span>
+        </div>
+        <h1 class="text-3xl leading-tight font-serif font-bold sm:text-4xl text-main">项目集合</h1>
+    </div>
     {portfolio.map((project) => <ProjectPreview project={project} class="mb-10 sm:mb-12" />)}
     <Pagination page={page} class="my-16 sm:my-24" />
 </BaseLayout>

@@ -10,22 +10,21 @@ const { title, publishDate, excerpt, sourceUrl } = news.data;
 const TitleTag = headingLevel;
 ---
 
-<a class:list={['flex justify-between items-start gap-8 group', className]} href={`/news/${news.id}/`}>
+<a
+    class:list={['flex justify-between items-start gap-8 group pb-6 border-b border-dashed border-main/20 hover:border-main/50 transition-colors', className]}
+    href={`/news/${news.id}/`}
+>
     <div class="grow">
-        <TitleTag
-            class="text-xl leading-tight font-serif font-medium group-hover:underline group-hover:decoration-dashed group-hover:underline-offset-4 group-hover:decoration-1 sm:text-2xl"
-        >
+        <TitleTag class="text-xl leading-tight font-serif font-medium group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors sm:text-2xl">
             {title}
         </TitleTag>
-        <div class="mt-1 text-sm leading-normal">
+        <div class="mt-2 text-sm text-main/60 leading-normal">
             <FormattedDate date={publishDate} />
-            {sourceUrl && (
-                <span class="ml-2 text-xs opacity-70">[外部来源]</span>
-            )}
+            {sourceUrl && <span class="ml-2 text-xs opacity-70">[外部来源]</span>}
         </div>
-        {excerpt && <div class="mt-3 text-sm leading-normal">{excerpt}</div>}
+        {excerpt && <div class="mt-4 text-sm text-main/80 leading-relaxed max-w-2xl">{excerpt}</div>}
     </div>
-    <div class="hidden font-serif italic opacity-0 transition group-hover:opacity-100 sm:inline-flex sm:gap-1 sm:items-center sm:shrink-0">
-        阅读详情 <ArrowRight class="fill-current w-4 h-4" />
+    <div class="hidden font-serif opacity-0 transition group-hover:opacity-100 sm:inline-flex sm:gap-1 sm:items-center sm:shrink-0 text-main/70">
+        阅读详情 <ArrowRight class="fill-current w-4 h-4 ml-1" />
     </div>
 </a>

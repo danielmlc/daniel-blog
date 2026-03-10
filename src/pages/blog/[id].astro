@@ -40,7 +40,7 @@ const { Content } = await render(post);
                         <>
                             {' '}
                             <span>
-                                (Updated on <FormattedDate date={updatedDate} />)
+                                (更新于 <FormattedDate date={updatedDate} />)
                             </span>
                         </>
                     )
@@ -62,13 +62,13 @@ const { Content } = await render(post);
                     </div>
                 )
             }
-            <Button class="copy-url-button" aria-label="Copy link" data-url={href} data-tooltip-default="Copy link" data-tooltip-success="Copied">Share</Button>
+            <Button class="copy-url-button" aria-label="复制链接" data-url={href} data-tooltip-default="复制链接" data-tooltip-success="已复制">分享</Button>
         </div>
     </article>
     {
         (prevPost || nextPost) && (
             <div class="my-16 sm:my-24">
-                <h2 class="mb-12 text-xl font-serif italic sm:mb-16 sm:text-2xl">Read Next</h2>
+                <h2 class="mb-12 text-xl font-serif italic sm:mb-16 sm:text-2xl">推荐阅读</h2>
                 {nextPost && <PostPreview post={nextPost} class="mb-10 sm:mb-12" headingLevel="h3" />}
                 {prevPost && <PostPreview post={prevPost} class="mb-10 sm:mb-12" headingLevel="h3" />}
             </div>
@@ -90,7 +90,7 @@ const { Content } = await render(post);
 
             await navigator.clipboard.writeText(url);
 
-            button.innerText = 'Copied';
+            button.innerText = '已复制';
 
             setTimeout(() => {
                 button.innerText = label;

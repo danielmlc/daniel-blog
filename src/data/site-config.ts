@@ -41,9 +41,9 @@ export type SiteConfig = {
 
 const siteConfig: SiteConfig = {
     website: 'https://danielmlc.top',
-    title: 'Danielmlc',
+    title: '神的孩子在跳舞',
     logo: {
-        src: '/favicon.ico',
+        src: '/favicon.svg',
     },
     subtitle: 'daniel的博客',
     description: '记录工作、生活、学习，分享技术、生活、感悟，有感而发，一起交流！',
@@ -99,8 +99,8 @@ const siteConfig: SiteConfig = {
         weatherCity: 'Shenzhen'
     },
     subscribe: {
-        title: 'Subscribe to Dante Newsletter',
-        text: 'One update per week. All the latest posts directly in your inbox.',
+        title: '订阅博客更新',
+        text: '第一时间获取我的最新文章与动态，通过邮箱推送。',
         formUrl: '#'
     },
     postsPerPage: 8,
