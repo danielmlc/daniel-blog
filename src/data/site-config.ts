@@ -70,21 +70,17 @@ const siteConfig: SiteConfig = {
         }
     ],
     footerNavLinks: [
-         {
+        {
             text: '关于我',
             href: '/about'
         },
         {
-            text: '联系',
-            href: '/contact'
-        },
-        {
-            text: '团队',
-            href: '/terms'
+            text: 'RSS 订阅',
+            href: '/rss.xml'
         }
     ],
     socialLinks: [
-       {
+        {
             text: 'github',
             href: 'https://github.com/danielmlc'
         },
@@ -94,7 +90,7 @@ const siteConfig: SiteConfig = {
         }
     ],
     hero: {
-        name: 'Danielmlc',
+        name: 'daniel的博客',
         avatar: {
             src: '/hero.png',
             alt: 'danielmlc 的头像'

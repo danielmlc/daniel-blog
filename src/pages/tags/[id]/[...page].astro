@@ -1,12 +1,12 @@
 ---
 import type { GetStaticPathsOptions, Page } from 'astro';
 import { type CollectionEntry, getCollection } from 'astro:content';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Pagination from '../../../components/Pagination.astro';
 import PostPreview from '../../../components/PostPreview.astro';
 import Subscribe from '../../../components/Subscribe.astro';
 import siteConfig from '../../../data/site-config';
-import { sortItemsByDateDesc, getAllTags, getPostsByTag } from '../../../utils/data-utils';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getAllTags, getPostsByTag, sortItemsByDateDesc } from '../../../utils/data-utils';
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     const posts = (await getCollection('blog')).sort(sortItemsByDateDesc);
@@ -34,12 +34,20 @@ const currentTag = allTags.find((tag) => {
 ---
 
 <BaseLayout
-    title={`Posts Tagged ${currentTag?.name}`}
-    description={`Explore a curated collection of blog posts under ${currentTag?.name}`}
+    title={`标签索引：${currentTag?.name}`}
+    description={`探索所有关于 ${currentTag?.name} 标签下的文章与随笔`}
     image={{ src: '/dante-preview.jpg', alt: 'The preview of the site' }}
     showHeader={false}
 >
-    <h1 class="mb-12 text-2xl leading-tight font-serif italic sm:mb-16 sm:text-4xl">Posts Tagged "{currentTag?.name}"</h1>
+    <div class="mb-12 sm:mb-16">
+        <div class="text-sm font-medium text-main/50 mb-4 tracking-widest uppercase flex items-center gap-2">
+            <span>标签归档</span>
+            <span class="w-8 h-[1px] bg-main/20"></span>
+        </div>
+        <h1 class="text-3xl leading-tight font-serif font-bold sm:text-4xl text-main">
+            {currentTag?.name}
+        </h1>
+    </div>
     {blog.map((post) => <PostPreview post={post} class="mb-10 sm:mb-12" />)}
     <Pagination page={page} class="my-16 sm:my-24" />
     <Subscribe class="my-16 sm:my-24" />

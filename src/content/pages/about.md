@@ -1,43 +1,54 @@
 ---
-title: 关于
+title: 关于我
 seo:
-  title: About Me
-  description: Learn more about the person behind the website and embark on a journey of inspiration and shared experiences.
+  title: 关于我 | Danielmlc
+  description: 了解更多关于这个博客背后的故事和内容。
   image:
     src: '/about.jpeg'
-    alt: A person sitting at a desk in front of a computer
+    alt: 桌面环境与计算机
 ---
 
-<img src="/about.png" alt="Alt text for image" style="display: block; margin-left: auto; margin-right: auto; width:60%;">
+## Hi, 我是 danielmlc。
 
-**Note!:** This about page is entirely fictional and created for the purpose of showcasing [Dante Astro.js theme functionality](https://justgoodui.com/astro-themes/dante/).
+一个长期主义的技术践行者，也是一个热爱游戏、音乐与文字的普通人。
 
-## Ethan Donovan - Web Developer based in Estonia
+我相信代码不仅仅是冰冷的机器指令，它更是思维的沉淀，是创造力的流露。在这里，我希望能像一个手艺人一样，用键盘敲击出那些微小但能够改变世界的力量。
 
-**Greetings!** I'm Ethan Donovan, a passionate web developer residing in the picturesque landscapes of [Estonia](https://en.wikipedia.org/wiki/Estonia). With a keen eye for design and a love for crafting seamless digital experiences, I bring a unique blend of creativity and technical expertise to the world of web development.
+我也希望能成为开源社区里一名有担当的贡献者。
 
-## Skills and Expertise
+> Writing code is a consolidation of thoughts, a materialization of creativity. Code changes the world!
 
-I specialize in front-end and back-end development, utilizing the latest technologies to build responsive and user-friendly websites. My proficiency includes **HTML**, **CSS**, **JavaScript**, and frameworks such as **Astro.js** for dynamic and interactive user interfaces. On the server side, I'm well-versed in Node.js and have experience with database management systems like MongoDB.
+<hr style="border: none; border-top: 1px dashed var(--tw-prose-hr); margin: 3rem 0;">
 
-## Innovation and Problem-Solving
+## 技术与探索
 
-I thrive on solving complex problems and transforming ideas into functional, elegant websites. Whether it's optimizing performance, implementing new features, or troubleshooting issues, I approach each challenge with enthusiasm and a commitment to delivering high-quality solutions.
+并非止步于日常的业务功能研发，我在软件工程的道路上始终保持着宽广的好奇心。这些年里，我在 **SaaS 前后端架构**、**微服务化设计** 以及 **分布式系统** 等深水区，也有着长期的研究与落地经验。
 
-## Global Perspective, Local Impact
+平日里，陪伴我构建这些想法的“老朋友”们有：
 
-Living in Estonia has not only influenced my appreciation for nature and culture but has also shaped my approach to web development. I understand the importance of creating digital solutions that resonate with local audiences while maintaining a global perspective.
+*   **语言与框架：** TypeScript, JavaScript, HTML5/CSS3, Python, Rust, Vue.js, Node.js, NestJS
+*   **数据与存储：** MySQL, TiDB
+*   **部署与基建：** Ubuntu, Docker, Kubernetes, Nginx, Jenkins
 
-## Continuous Learning
+我不拘泥于特定的语言和工具，只选择最合适当前场景的利器。
 
-The dynamic nature of the tech industry inspires me to stay up-to-date with the latest trends and advancements. I'm always eager to expand my skill set and embrace emerging technologies that enhance the functionality and aesthetics of the websites I create.
+<hr style="border: none; border-top: 1px dashed var(--tw-prose-hr); margin: 3rem 0;">
 
-## Collaboration and Communication
+## 关于此地
 
-I believe in the power of collaboration and effective communication. Whether working with clients, designers, or fellow developers, I value clear communication to ensure the success of every project.
+搭建这个安静的角落，初衷非常简单：
 
-## Get in Touch
+*   **备忘与沉淀：** 记录那些踩过的坑、不经意间的灵感，以及厚重的技术总结。好记性不如烂笔头。
+*   **分享与交流：** 在这片浩瀚的互联网里留下一点属于自己的痕迹。哪怕其中的只言片语恰好能带来一点启发，对我而言就是莫大的荣幸。
+*   **生活的 B 面：** 技术并非生活的全部。除了代码，我也会偶然更新些关于游戏、音乐的漫谈，以及路上的风景。
 
-Are you looking to elevate your online presence or bring your digital ideas to life? I'd love to hear from you! Feel free to reach out for collaboration, consultation, or just a friendly chat about all things web development.
+<hr style="border: none; border-top: 1px dashed var(--tw-prose-hr); margin: 3rem 0;">
 
-_Let's build something amazing together!_
+## 联系我
+
+如果你对我的项目感兴趣，或者有些关于技术的困惑想要探讨，亦或是单纯想交个朋友，这扇门永远敞开。
+
+*   **Github：** [github.com/danielmlc](https://github.com/danielmlc)
+*   **Bilibili：** [danielmlc 的频道](https://space.bilibili.com/374721744/)
+
+保持热爱，奔赴山海。很高兴认识你。

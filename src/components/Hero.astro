@@ -7,87 +7,147 @@ const weatherCity = hero?.weatherCity || 'Shenzhen';
 const quotesJson = JSON.stringify(quotes);
 ---
 
-{hero && (
-    <section class="w-full mb-16 sm:mb-24 flex flex-col gap-4">
-        {/* Row 1: Profile + Date/Weather */}
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Profile Card */}
-            <div class="p-6 border border-dashed border-main rounded-lg flex items-center gap-5">
+{
+    hero && (
+        <section class="w-full mb-28 sm:mb-40 flex flex-col gap-20 sm:gap-28 mt-8 sm:mt-12">
+            {/* Profile Section */}
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-8 sm:gap-12 text-center sm:text-left">
                 {hero.avatar?.src && (
                     <img
-                        class="w-16 h-16 rounded-full object-cover shrink-0"
+                        class="w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover shrink-0 shadow-lg border-4 border-transparent dark:border-main/5 transition-transform hover:scale-105 duration-700"
                         src={hero.avatar.src}
                         alt={hero.avatar.alt || ''}
-                        width="64"
-                        height="64"
+                        width="144"
+                        height="144"
                         loading="eager"
                     />
                 )}
-                <div>
-                    {hero.name && (
-                        <h1 class="text-xl font-serif font-medium leading-tight sm:text-2xl">{hero.name}</h1>
-                    )}
-                    {hero.bio && (
-                        <p class="mt-1 text-sm leading-normal opacity-80">{hero.bio}</p>
-                    )}
-                </div>
-            </div>
-
-            {/* Date / Weather Card */}
-            <div class="p-6 border border-dashed border-main rounded-lg">
-                <div id="date-weather-card">
-                    <div class="text-lg font-serif font-medium" id="solar-date">--</div>
-                    <div class="mt-1 text-sm opacity-80" id="lunar-date">--</div>
-                    <div class="mt-3 text-sm opacity-80" id="weather-info">天气加载中...</div>
-                </div>
-            </div>
-        </div>
-
-        {/* Row 2: Daily Quote */}
-        <div class="p-6 border border-dashed border-main rounded-lg">
-            <blockquote class="font-serif italic text-base leading-relaxed sm:text-lg" id="daily-quote">
-                <span id="quote-text">...</span>
-                <footer class="mt-2 text-sm not-italic opacity-70">—— <cite id="quote-author"></cite></footer>
-            </blockquote>
-        </div>
-
-        {/* Row 3: Pet Area */}
-        <div class="p-6 border border-dashed border-main rounded-lg overflow-hidden" id="pet-area">
-            <div class="text-xs opacity-50 mb-3 font-serif italic">与小猫互动 · 移动鼠标试试</div>
-            <div class="relative h-32 sm:h-40" id="pet-container">
-                {/* Cat face - built with HTML/CSS */}
-                <div id="pet" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-700 ease-out">
-                    {/* Head */}
-                    <div class="relative w-20 h-16">
-                        {/* Ears */}
-                        <div class="absolute -top-3 left-1 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[12px] border-l-transparent border-r-transparent border-b-current opacity-60 rotate-[-10deg]"></div>
-                        <div class="absolute -top-3 right-1 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[12px] border-l-transparent border-r-transparent border-b-current opacity-60 rotate-[10deg]"></div>
-                        {/* Face */}
-                        <div class="w-20 h-16 rounded-[50%] border-2 border-current flex items-center justify-center gap-6 relative">
-                            {/* Eyes */}
-                            <div class="w-2.5 h-3 rounded-full bg-current relative" id="eye-left">
-                                <div class="w-1 h-1 rounded-full bg-main absolute top-0.5 left-0.5" id="pupil-left"></div>
-                            </div>
-                            <div class="w-2.5 h-3 rounded-full bg-current relative" id="eye-right">
-                                <div class="w-1 h-1 rounded-full bg-main absolute top-0.5 left-0.5" id="pupil-right"></div>
-                            </div>
-                            {/* Nose */}
-                            <div class="absolute bottom-3.5 left-1/2 -translate-x-1/2 w-1.5 h-1 rounded-full bg-current opacity-50"></div>
-                            {/* Mouth */}
-                            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-4 h-2 border-b border-current rounded-b-full opacity-40" id="pet-mouth"></div>
+                <div class="flex flex-col gap-4 mt-2 sm:mt-6">
+                    {hero.name && <h1 class="text-4xl sm:text-5xl font-serif font-bold leading-tight tracking-tight">{hero.name}</h1>}
+                    {hero.bio && <p class="text-base sm:text-xl leading-relaxed opacity-80 max-w-2xl">{hero.bio}</p>}
+                    {/* Date / Weather inline */}
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-6 gap-y-3 mt-4 text-sm sm:text-base opacity-60 font-medium tracking-wide">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                            </svg>
+                            <span id="solar-date">--</span>
+                        </div>
+                        <span class="hidden sm:inline opacity-30">|</span>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                                />
+                            </svg>
+                            <span id="lunar-date">--</span>
+                        </div>
+                        <span class="hidden sm:inline opacity-30">|</span>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+                                />
+                            </svg>
+                            <span id="weather-info">天气加载中...</span>
                         </div>
                     </div>
-                    {/* Body hint */}
-                    <div class="mx-auto w-12 h-3 border-x-2 border-current opacity-30 rounded-b-lg"></div>
-                </div>
-                {/* Speech bubble */}
-                <div id="pet-speech" class="absolute top-2 right-4 sm:right-8 text-xs opacity-0 transition-opacity duration-300 px-3 py-1.5 border border-dashed border-current rounded-lg font-serif">
-                    喵~
                 </div>
             </div>
-        </div>
-    </section>
-)}
+
+            {/* Daily Quote Section - Sketch Style Background */}
+            <div
+                class="relative overflow-hidden rounded-2xl p-10 sm:p-14 border border-main/10 dark:border-main/5 bg-transparent w-full transition-colors duration-300"
+                id="quote-container"
+            >
+                {/* SVG Sketch Pattern Background (Diagonal Hatching) */}
+                <div class="absolute inset-0 z-0 pointer-events-none opacity-[0.08] dark:opacity-[0.05] text-gray-500 dark:text-main">
+                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <pattern id="sketch-lines" width="12" height="12" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                                <path d="M 0 0 L 0 12" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="square" />
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#sketch-lines)" />
+                    </svg>
+                    {/* Focal fade mask for the pattern */}
+                    <div class="absolute inset-0 bg-gradient-to-tr from-transparent to-black/[0.03] dark:to-main/10 rounded-2xl mix-blend-overlay" />
+                </div>
+
+                {/* Content */}
+                <div class="relative z-10 flex flex-col items-center text-center">
+                    <svg class="w-8 h-8 opacity-20 mb-6 text-main transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                    </svg>
+                    <blockquote
+                        class="font-serif italic text-2xl sm:text-3xl leading-relaxed sm:leading-loose text-main/90 max-w-3xl transition-colors duration-300 px-4"
+                        id="daily-quote"
+                    >
+                        <span id="quote-text">...</span>
+                    </blockquote>
+                    <footer class="mt-8 pt-4 sm:pt-6 border-t border-main/10 w-24 mx-auto text-sm sm:text-base font-medium opacity-60 tracking-[0.2em] uppercase text-main transition-colors duration-300">
+                        <cite id="quote-author" />
+                    </footer>
+                </div>
+            </div>
+
+            {/* Pet Area (Floating Bottom Right) */}
+            <div class="w-full flex justify-end mt-8 sm:mt-12" id="pet-area">
+                <div class="relative h-24 sm:h-32 w-40 cursor-pointer group" id="pet-container" title="摸摸小猫">
+                    <div class="absolute -top-4 right-1/2 translate-x-1/2 text-xs opacity-0 group-hover:opacity-50 transition-opacity duration-300 font-serif italic whitespace-nowrap">
+                        与小猫互动 · 移动鼠标
+                    </div>
+                    {/* Cat face - built with HTML/CSS */}
+                    <div id="pet" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-700 ease-out z-10">
+                        {/* Head */}
+                        <div class="relative w-20 h-16">
+                            {/* Ears */}
+                            <div class="absolute -top-3 left-1 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[12px] border-l-transparent border-r-transparent border-b-current opacity-60 rotate-[-10deg]" />
+                            <div class="absolute -top-3 right-1 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[12px] border-l-transparent border-r-transparent border-b-current opacity-60 rotate-[10deg]" />
+                            {/* Face */}
+                            <div class="w-20 h-16 rounded-[50%] border-2 border-current flex items-center justify-center gap-6 relative bg-main">
+                                {/* Eyes */}
+                                <div class="w-2.5 h-3 rounded-full bg-current relative" id="eye-left">
+                                    <div class="w-1 h-1 rounded-full bg-main absolute top-0.5 left-0.5" id="pupil-left" />
+                                </div>
+                                <div class="w-2.5 h-3 rounded-full bg-current relative" id="eye-right">
+                                    <div class="w-1 h-1 rounded-full bg-main absolute top-0.5 left-0.5" id="pupil-right" />
+                                </div>
+                                {/* Nose */}
+                                <div class="absolute bottom-3.5 left-1/2 -translate-x-1/2 w-1.5 h-1 rounded-full bg-current opacity-50" />
+                                {/* Mouth */}
+                                <div
+                                    class="absolute bottom-2 left-1/2 -translate-x-1/2 w-4 h-2 border-b border-current rounded-b-full opacity-40"
+                                    id="pet-mouth"
+                                />
+                            </div>
+                        </div>
+                        {/* Body hint */}
+                        <div class="mx-auto w-12 h-3 border-x-2 border-current opacity-30 rounded-b-lg" />
+                    </div>
+                    {/* Speech bubble */}
+                    <div
+                        id="pet-speech"
+                        class="absolute -top-2 right-4 z-20 text-xs opacity-0 transition-opacity duration-300 px-3 py-1.5 border border-current rounded-2xl rounded-br-sm font-serif bg-main shadow-sm"
+                    >
+                        喵~
+                    </div>
+                </div>
+            </div>
+        </section>
+    )
+}
 
 <script define:vars={{ quotesJson, weatherCity }}>
     const quotes = JSON.parse(quotesJson);
@@ -111,7 +171,9 @@ const quotesJson = JSON.stringify(quotes);
 
         try {
             const lunarStr = new Intl.DateTimeFormat('zh-CN-u-ca-chinese', {
-                year: 'numeric', month: 'long', day: 'numeric'
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             }).format(now);
             lunarEl.textContent = `农历 ${lunarStr}`;
         } catch {
@@ -136,8 +198,8 @@ const quotesJson = JSON.stringify(quotes);
         }
 
         fetch(`https://wttr.in/${weatherCity}?format=%t+%C&lang=zh`)
-            .then(res => res.text())
-            .then(text => {
+            .then((res) => res.text())
+            .then((text) => {
                 const result = `${text.trim()} · ${weatherCity}`;
                 el.textContent = result;
                 sessionStorage.setItem('weather-cache', JSON.stringify({ text: result, ts: Date.now() }));

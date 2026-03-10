@@ -1,12 +1,12 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/Button.astro';
 import Hero from '../components/Hero.astro';
 import NewsPreview from '../components/NewsPreview.astro';
 import PostPreview from '../components/PostPreview.astro';
 import ProjectPreview from '../components/ProjectPreview.astro';
 import siteConfig from '../data/site-config';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import { sortItemsByDateDesc } from '../utils/data-utils';
 
 const posts = (await getCollection('blog')).sort(sortItemsByDateDesc);
@@ -19,11 +19,11 @@ const projects = (await getCollection('projects')).sort(sortItemsByDateDesc);
 const featuredProjects = projects.filter(({ data }) => data.isFeatured);
 ---
 
-<BaseLayout description={siteConfig.description} image={siteConfig.image}>
+<BaseLayout description={siteConfig.description} image={siteConfig.image} showHeader={false}>
     <Hero />
     {
         latestNews?.length > 0 && (
-            <div class="mb-16 sm:mb-24">
+            <div class="mb-24 sm:mb-32">
                 <h2 class="mb-12 text-xl font-serif italic sm:mb-16 sm:text-2xl">最新资讯</h2>
                 {latestNews.map((news) => (
                     <NewsPreview news={news} class="mb-10 sm:mb-12" headingLevel="h3" />
@@ -36,7 +36,7 @@ const featuredProjects = projects.filter(({ data }) => data.isFeatured);
     }
     {
         featuredPosts?.length > 0 && (
-            <div class="mb-16 sm:mb-24">
+            <div class="mb-24 sm:mb-32">
                 <h2 class="mb-12 text-xl font-serif italic sm:mb-16 sm:text-2xl">精选文章</h2>
                 {featuredPosts.map((post) => (
                     <PostPreview post={post} class="mb-10 sm:mb-12" headingLevel="h3" />
@@ -49,7 +49,7 @@ const featuredProjects = projects.filter(({ data }) => data.isFeatured);
     }
     {
         featuredProjects?.length > 0 && (
-            <div class="mb-16 sm:mb-24">
+            <div class="mb-24 sm:mb-32">
                 <h2 class="mb-12 text-xl font-serif italic sm:mb-16 sm:text-2xl">精选项目</h2>
                 {featuredProjects.map((project) => (
                     <ProjectPreview project={project} class="mb-10 sm:mb-12" headingLevel="h3" />
