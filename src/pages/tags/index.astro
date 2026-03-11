@@ -3,38 +3,59 @@ import { getCollection } from 'astro:content';
 import Subscribe from '../../components/Subscribe.astro';
 import ArrowRight from '../../icons/ArrowRight.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getAllTags, getPostsByTag, sortItemsByDateDesc } from '../../utils/data-utils';
+import { getAllTags, getItemsByTag } from '../../utils/data-utils';
 
-const posts = (await getCollection('blog')).sort(sortItemsByDateDesc);
-const tags = getAllTags(posts).sort((tagA, tagB) => {
-    const postCountTagA = getPostsByTag(posts, tagA.id).length;
-    const postCountTagB = getPostsByTag(posts, tagB.id).length;
-    return postCountTagB - postCountTagA;
-});
+const [posts, newsItems, projects] = await Promise.all([
+    getCollection('blog'),
+    getCollection('news'),
+    getCollection('projects')
+]);
+
+const blogTags = getAllTags(posts).sort((a, b) => getItemsByTag(posts, b.id).length - getItemsByTag(posts, a.id).length);
+const newsTags = getAllTags(newsItems).sort((a, b) => getItemsByTag(newsItems, b.id).length - getItemsByTag(newsItems, a.id).length);
+const projectTags = getAllTags(projects).sort((a, b) => getItemsByTag(projects, b.id).length - getItemsByTag(projects, a.id).length);
+
+const sections = [
+    { label: '文章标签', tags: blogTags, items: posts, prefix: 'blog', unit: '篇' },
+    { label: '资讯标签', tags: newsTags, items: newsItems, prefix: 'news', unit: '条' },
+    { label: '项目标签', tags: projectTags, items: projects, prefix: 'projects', unit: '个' }
+].filter((s) => s.tags.length > 0);
 ---
 
-<BaseLayout title="文章归档与分类" description="按照标签探索文章与想法，快速定位你感兴趣的话题内容。" showHeader={false}>
-    <h1 class="mb-12 text-3xl font-serif sm:mb-16 sm:text-4xl text-main font-bold">主题标签墙</h1>
+<BaseLayout title="分类标签" description="按照标签浏览文章、资讯与项目，快速定位感兴趣的话题。" showHeader={false}>
+    <h1 class="mb-12 text-3xl font-serif sm:mb-16 sm:text-4xl text-main font-bold">分类标签</h1>
+
     {
-        tags.map((tag) => {
-            const postCount = getPostsByTag(posts, tag.id).length;
-            return (
-                <a
-                    class="mb-8 flex justify-between items-start gap-8 group sm:mb-10 pb-6 border-b border-dashed border-main/20 hover:border-main/50 transition-colors"
-                    href={`/tags/${tag.id}`}
-                >
-                    <div class="grow">
-                        <h2 class="text-xl leading-tight font-serif font-medium group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors sm:text-2xl">
-                            {tag.name}
-                        </h2>
-                        <div class="mt-2 text-sm text-main/60 leading-normal">共收录 {postCount} 篇文章</div>
-                    </div>
-                    <div class="hidden font-serif opacity-0 transition group-hover:opacity-100 sm:inline-flex sm:gap-1 sm:items-center sm:shrink-0 text-main/70">
-                        查看相关文章 <ArrowRight class="fill-current w-4 h-4 ml-1" />
-                    </div>
-                </a>
-            );
-        })
+        sections.map((section) => (
+            <section class="mb-16 sm:mb-20">
+                <h2 class="text-xs font-medium tracking-widest uppercase text-main/40 mb-8 flex items-center gap-3">
+                    {section.label}
+                    <span class="flex-1 h-[1px] bg-main/10" />
+                </h2>
+                <div class="space-y-6">
+                    {section.tags.map((tag) => {
+                        const count = getItemsByTag(section.items, tag.id).length;
+                        return (
+                            <a
+                                class="flex justify-between items-center gap-8 group pb-5 border-b border-dashed border-main/20 hover:border-main/50 transition-colors"
+                                href={`/tags/${section.prefix}/${tag.id}`}
+                            >
+                                <div>
+                                    <span class="text-lg font-serif font-medium group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
+                                        {tag.name}
+                                    </span>
+                                    <span class="ml-3 text-sm text-main/40">{count} {section.unit}</span>
+                                </div>
+                                <div class="hidden font-serif opacity-0 transition group-hover:opacity-100 sm:inline-flex sm:gap-1 sm:items-center sm:shrink-0 text-main/70 text-sm">
+                                    查看全部 <ArrowRight class="fill-current w-4 h-4 ml-1" />
+                                </div>
+                            </a>
+                        );
+                    })}
+                </div>
+            </section>
+        ))
     }
+
     <Subscribe class="my-16 sm:my-24" />
 </BaseLayout>

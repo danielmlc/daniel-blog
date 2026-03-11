@@ -1,0 +1,33 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import ProjectPreview from '../../../components/ProjectPreview.astro';
+import Subscribe from '../../../components/Subscribe.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getAllTags, getItemsByTag, sortItemsByDateDesc } from '../../../utils/data-utils';
+
+export async function getStaticPaths() {
+    const projects = await getCollection('projects');
+    const tags = getAllTags(projects);
+    return tags.map((tag) => ({
+        params: { id: tag.id },
+        props: { tag, projects: getItemsByTag(projects, tag.id).sort(sortItemsByDateDesc) }
+    }));
+}
+
+type Props = { tag: { name: string; id: string }; projects: CollectionEntry<'projects'>[] };
+const { tag, projects } = Astro.props;
+---
+
+<BaseLayout title={`项目标签：${tag.name}`} description={`浏览所有标签为「${tag.name}」的项目`} showHeader={false}>
+    <div class="mb-12 sm:mb-16">
+        <div class="text-sm font-medium text-main/50 mb-4 tracking-widest uppercase flex items-center gap-2">
+            <a href="/tags" class="hover:text-main/80 transition-colors">分类标签</a>
+            <span class="w-8 h-[1px] bg-main/20" />
+            <span>项目</span>
+        </div>
+        <h1 class="text-3xl leading-tight font-serif font-bold sm:text-4xl text-main">{tag.name}</h1>
+        <p class="mt-3 text-sm text-main/50">共 {projects.length} 个项目</p>
+    </div>
+    {projects.map((project) => <ProjectPreview project={project} class="mb-10 sm:mb-12" />)}
+    <Subscribe class="my-16 sm:my-24" />
+</BaseLayout>

@@ -9,7 +9,9 @@
       "WebFetch(domain:hacker-news.firebaseio.com)",
       "Bash(pnpm add:*)",
       "Bash(pnpm approve-builds:*)",
-      "Bash(pnpm install:*)"
+      "Bash(pnpm install:*)",
+      "Bash(rm \"c:/work/project/daniel-blog/src/pages/tags/[id]/[...page].astro\")",
+      "Bash(rmdir \"c:/work/project/daniel-blog/src/pages/tags/[id]\")"
     ]
   }
 }

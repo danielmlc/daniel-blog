@@ -1,0 +1,33 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import NewsPreview from '../../../components/NewsPreview.astro';
+import Subscribe from '../../../components/Subscribe.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getAllTags, getItemsByTag, sortItemsByDateDesc } from '../../../utils/data-utils';
+
+export async function getStaticPaths() {
+    const newsItems = await getCollection('news');
+    const tags = getAllTags(newsItems);
+    return tags.map((tag) => ({
+        params: { id: tag.id },
+        props: { tag, newsItems: getItemsByTag(newsItems, tag.id).sort(sortItemsByDateDesc) }
+    }));
+}
+
+type Props = { tag: { name: string; id: string }; newsItems: CollectionEntry<'news'>[] };
+const { tag, newsItems } = Astro.props;
+---
+
+<BaseLayout title={`资讯标签：${tag.name}`} description={`浏览所有标签为「${tag.name}」的科技资讯`} showHeader={false}>
+    <div class="mb-12 sm:mb-16">
+        <div class="text-sm font-medium text-main/50 mb-4 tracking-widest uppercase flex items-center gap-2">
+            <a href="/tags" class="hover:text-main/80 transition-colors">分类标签</a>
+            <span class="w-8 h-[1px] bg-main/20" />
+            <span>资讯</span>
+        </div>
+        <h1 class="text-3xl leading-tight font-serif font-bold sm:text-4xl text-main">{tag.name}</h1>
+        <p class="mt-3 text-sm text-main/50">共 {newsItems.length} 条资讯</p>
+    </div>
+    {newsItems.map((news) => <NewsPreview news={news} class="mb-10 sm:mb-12" />)}
+    <Subscribe class="my-16 sm:my-24" />
+</BaseLayout>
