@@ -93,6 +93,6 @@ html.dark {
     }
 
     .prose blockquote {
-        @apply font-serif font-normal italic border-none pl-0 text-[1.375em] leading-snug sm:text-[1.66667em];
+        @apply font-serif font-normal italic text-base opacity-80 border-none pl-0 py-1;
     }
 }
