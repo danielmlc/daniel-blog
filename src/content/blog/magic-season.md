@@ -1,6 +1,7 @@
 ---
 title: 今天是春天
 excerpt: 蓝天打了蜡，在这样的春天。在这样的春天，小树叶儿也都上了釉彩。世界，忽然显得明朗了。我沿着草坡往山上走，春草已经长得很浓了...
+isFeatured: true
 publishDate: 'Feb 22 2013'
 tags:
   - 摘录

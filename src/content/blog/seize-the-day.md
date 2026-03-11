@@ -1,6 +1,7 @@
 ---
 title: 把握今天
 excerpt: 落后的分针奋力追赶时针，等不顾一切追上时。时间呢？早已悄悄溜走！
+isFeatured: true
 publishDate: 'Feb 26 2009'
 tags:
   - 随笔

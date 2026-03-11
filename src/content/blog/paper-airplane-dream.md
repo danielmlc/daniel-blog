@@ -1,6 +1,7 @@
 ---
 title: 纸飞机的梦想
 excerpt: 我一片苍茫，田野开阔。麦田绿滋滋，天空湛蓝。长空里，有白云飘过。纸飞机从空中划过...
+isFeatured: true
 publishDate: 'Sep 08 2010'
 tags:
   - 诗词
