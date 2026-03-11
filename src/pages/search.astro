@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import siteConfig from '../data/site-config';
+---
+
+<BaseLayout description="全站搜索" title={`搜索 - ${siteConfig.title}`}>
+    <div class="mb-12">
+        <h1 class="mb-6 text-3xl font-serif italic">搜索文章</h1>
+        <p class="text-[var(--text-main)] opacity-80">在这里寻找你想看到的足迹与回忆...</p>
+    </div>
+
+    <div class="search-container min-h-[400px]">
+        <div id="search"></div>
+    </div>
+
+    <!-- Pagefind UI 脚本与样式注入 -->
+    <link href="/_pagefind/pagefind-ui.css" rel="stylesheet" />
+    <script src="/_pagefind/pagefind-ui.js" is:inline></script>
+
+    <script is:inline>
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof PagefindUI !== 'undefined') {
+                new PagefindUI({
+                    element: '#search',
+                    showSubResults: true,
+                    showImages: true,
+                    resetStyles: false
+                });
+            } else {
+                document.getElementById('search').innerHTML = '<p class="text-sm opacity-50 mt-4">⚠️ 搜索组件将在生产环境构建 (npm run build) 后生效。</p>';
+            }
+        });
+    </script>
+
+    <style is:global>
+        /* 适配当前博客主题的暗色和亮色模式，覆写一些 Pagefind 的原生样式 */
+        :root {
+            --pagefind-ui-primary: var(--text-main);
+            --pagefind-ui-text: var(--text-main);
+            --pagefind-ui-background: var(--bg-muted);
+            --pagefind-ui-border: var(--border-main);
+            --pagefind-ui-tag: var(--bg-main);
+            --pagefind-ui-border-width: 1px;
+            --pagefind-ui-border-radius: 4px;
+            --pagefind-ui-image-border-radius: 4px;
+            --pagefind-ui-image-box-ratio: 3 / 2;
+            --pagefind-ui-font: var(--font-sans);
+        }
+
+        .pagefind-ui__search-input {
+            font-weight: 400 !important;
+        }
+
+        .pagefind-ui__result-title {
+            font-weight: 600 !important;
+        }
+
+        .pagefind-ui__result-excerpt mark {
+            background-color: var(--text-main);
+            color: var(--bg-main);
+            padding: 0.1em 0.2rem;
+            border-radius: 2px;
+        }
+    </style>
+</BaseLayout>
