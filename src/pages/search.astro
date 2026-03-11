@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import siteConfig from '../data/site-config';
 ---
 
-<BaseLayout description="全站搜索" title={`搜索 - ${siteConfig.title}`}>
+<BaseLayout description="全站搜索" title={`搜索 - ${siteConfig.title}`} showHeader={false}>
     <div class="mb-12">
         <h1 class="mb-6 text-3xl font-serif italic">搜索文章</h1>
         <p class="text-[var(--text-main)] opacity-80">在这里寻找你想看到的足迹与回忆...</p>
@@ -13,21 +13,43 @@ import siteConfig from '../data/site-config';
         <div id="search"></div>
     </div>
 
-    <!-- Pagefind UI 脚本与样式注入 -->
+    <!-- Pagefind UI 样式与动态脚本注入 -->
     <link href="/_pagefind/pagefind-ui.css" rel="stylesheet" />
-    <script src="/_pagefind/pagefind-ui.js" is:inline></script>
 
     <script is:inline>
-        window.addEventListener('DOMContentLoaded', () => {
-            if (typeof PagefindUI !== 'undefined') {
-                new PagefindUI({
+        document.addEventListener('astro:page-load', () => {
+            const searchElement = document.getElementById('search');
+            if (!searchElement) return;
+
+            const initPageFind = () => {
+                // 为了支持页面反复跳转返回刷新，需要先清空内容防止搜索框被渲染两次
+                searchElement.innerHTML = '';
+                new window.PagefindUI({
                     element: '#search',
                     showSubResults: true,
                     showImages: true,
                     resetStyles: false
                 });
+            };
+
+            if (typeof window.PagefindUI !== 'undefined') {
+                initPageFind();
             } else {
-                document.getElementById('search').innerHTML = '<p class="text-sm opacity-50 mt-4">⚠️ 搜索组件将在生产环境构建 (npm run build) 后生效。</p>';
+                // 如果 PagefindUI 对象不存在（比如首次 SPA 无刷新跳转过来时），动态加载脚本
+                searchElement.innerHTML = '<p class="text-sm opacity-50 mt-4">搜索组件加载中...</p>';
+                const script = document.createElement('script');
+                script.src = '/_pagefind/pagefind-ui.js';
+                script.onload = () => {
+                    if (typeof window.PagefindUI !== 'undefined') {
+                        initPageFind();
+                    } else {
+                        searchElement.innerHTML = '<p class="text-sm opacity-50 mt-4">⚠️ 搜索组件将在生产环境构建 (npm run build) 后生效。</p>';
+                    }
+                };
+                script.onerror = () => {
+                    searchElement.innerHTML = '<p class="text-sm opacity-50 mt-4">⚠️ 无法加载搜索组件。请确认是否已执行生产环境构建 (npm run build)。</p>';
+                };
+                document.head.appendChild(script);
             }
         });
     </script>
@@ -49,6 +71,15 @@ import siteConfig from '../data/site-config';
 
         .pagefind-ui__search-input {
             font-weight: 400 !important;
+            color: var(--text-main) !important;
+            background-color: var(--bg-main) !important;
+        }
+
+        .pagefind-ui__result-title .pagefind-ui__result-link,
+        .pagefind-ui__result-excerpt,
+        .pagefind-ui__message,
+        .pagefind-ui__button {
+            color: var(--text-main) !important;
         }
 
         .pagefind-ui__result-title {
@@ -56,8 +87,8 @@ import siteConfig from '../data/site-config';
         }
 
         .pagefind-ui__result-excerpt mark {
-            background-color: var(--text-main);
-            color: var(--bg-main);
+            background-color: #888888 !important; /* 命中的文字底色改为中间色/灰色 */
+            color: #ffffff !important; /* 高亮文字在灰底上统一显示为白色 */
             padding: 0.1em 0.2rem;
             border-radius: 2px;
         }
