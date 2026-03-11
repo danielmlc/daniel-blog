@@ -1,0 +1,92 @@
+---
+// WeatherWidget.astro
+interface Props {
+    weatherCity: string;
+}
+const { weatherCity } = Astro.props;
+---
+
+{/* Small Exquisite Weather Widget */}
+<div
+    class="group flex items-center gap-2 px-3 py-1.5 bg-main/[0.03] hover:bg-main/[0.08] dark:bg-main/[0.05] dark:hover:bg-main/[0.1] border border-main/10 rounded-full text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-md cursor-default text-main/80 hover:text-main"
+    title="当地天气"
+    data-weather-city={weatherCity}
+    id="weather-widget-container"
+>
+    <span id="weather-emoji" class="text-base sm:text-lg filter drop-shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300"
+    ></span>
+    <span id="weather-temp" class="tracking-tight ml-0.5"></span>
+    <span class="w-[1px] h-3.5 bg-main/20 mx-0.5"></span>
+    <span id="weather-desc" class="text-xs sm:text-sm font-normal opacity-90">加载中...</span>
+</div>
+
+<script>
+    function wmoToZh(code: number) {
+        if (code === 0) return ['晴', '☀️'];
+        if (code <= 2) return ['晴间多云', '⛅'];
+        if (code === 3) return ['阴', '☁️'];
+        if (code <= 48) return ['雾', '🌫️'];
+        if (code <= 55) return ['毛毛雨', '🌦️'];
+        if (code <= 65) return code <= 61 ? ['小雨', '🌧️'] : code <= 63 ? ['中雨', '🌧️'] : ['大雨', '🌧️'];
+        if (code <= 77) return ['雪', '❄️'];
+        if (code <= 82) return ['阵雨', '🌦️'];
+        if (code <= 86) return ['阵雪', '🌨️'];
+        if (code <= 99) return ['雷暴', '⛈️'];
+        return ['未知', '🌡️'];
+    }
+
+    async function initWeather() {
+        const container = document.getElementById('weather-widget-container');
+        if (!container) return;
+
+        const weatherCity = container.getAttribute('data-weather-city') || 'Shenzhen';
+        const emojiEl = document.getElementById('weather-emoji');
+        const tempEl = document.getElementById('weather-temp');
+        const descEl = document.getElementById('weather-desc');
+        if (!emojiEl || !tempEl || !descEl) return;
+
+        const cacheKey = `weather-cache-v2:${weatherCity}`;
+        const cached = sessionStorage.getItem(cacheKey);
+
+        const renderWeather = (emoji: string, temp: number | string, desc: string, name: string) => {
+            emojiEl.textContent = emoji;
+            tempEl.textContent = `${temp}°C`;
+            descEl.textContent = `${desc} · ${name}`;
+        };
+
+        if (cached) {
+            try {
+                const data = JSON.parse(cached);
+                if (Date.now() - data.ts < 1800000) {
+                    renderWeather(data.emoji, data.temp, data.desc, data.name);
+                    return;
+                }
+            } catch {}
+        }
+
+        try {
+            const geoRes = await fetch(
+                `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(weatherCity)}&count=1&language=zh&format=json`
+            );
+            const geoData = await geoRes.json();
+            if (!geoData.results?.length) throw new Error('geocoding failed');
+            const { latitude, longitude, name } = geoData.results[0];
+
+            const wRes = await fetch(
+                `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&timezone=auto`
+            );
+            const wData = await wRes.json();
+            const temp = Math.round(wData.current.temperature_2m);
+            const [desc, emoji] = wmoToZh(wData.current.weather_code);
+
+            renderWeather(emoji, temp, desc, name);
+            sessionStorage.setItem(cacheKey, JSON.stringify({ emoji, temp, desc, name, ts: Date.now() }));
+        } catch {
+            descEl.textContent = weatherCity;
+        }
+    }
+
+    // Init on page load (supports Astro view transitions)
+    initWeather();
+    document.addEventListener('astro:page-load', initWeather);
+</script>

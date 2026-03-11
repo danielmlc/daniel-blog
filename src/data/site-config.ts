@@ -90,13 +90,13 @@ const siteConfig: SiteConfig = {
         }
     ],
     hero: {
-        name: 'daniel的博客',
+        name: 'danielmlc的博客',
         avatar: {
             src: '/hero.png',
             alt: 'danielmlc 的头像'
         },
         bio: '一个热爱技术与生活的开发者，记录工作、学习与日常的点滴。',
-        weatherCity: 'Shenzhen'
+        weatherCity: '西安'
     },
     subscribe: {
         title: '订阅博客更新',

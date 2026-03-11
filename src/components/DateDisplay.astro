@@ -1,0 +1,55 @@
+---
+// DateDisplay.astro
+---
+
+{/* Date inline */}
+<div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-6 gap-y-3 text-sm sm:text-base opacity-60 font-medium tracking-wide">
+    <div class="flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+        <span id="solar-date">--</span>
+    </div>
+    <span class="hidden sm:inline opacity-30">|</span>
+    <div class="flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+        </svg>
+        <span id="lunar-date">--</span>
+    </div>
+</div>
+
+<script>
+    function initDate() {
+        const now = new Date();
+        const solarEl = document.getElementById('solar-date');
+        const lunarEl = document.getElementById('lunar-date');
+        if (!solarEl || !lunarEl) return;
+
+        const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+        solarEl.textContent = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 星期${weekdays[now.getDay()]}`;
+
+        try {
+            const lunarStr = new Intl.DateTimeFormat('zh-CN-u-ca-chinese', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }).format(now);
+            lunarEl.textContent = `农历 ${lunarStr}`;
+        } catch {
+            lunarEl.textContent = '';
+        }
+    }
+
+    // Init on page load (supports Astro view transitions)
+    initDate();
+    document.addEventListener('astro:page-load', initDate);
+</script>

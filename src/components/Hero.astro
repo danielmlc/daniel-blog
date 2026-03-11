@@ -1,10 +1,11 @@
 ---
 import siteConfig from '../data/site-config';
-import quotes from '../data/quotes';
+import DailyQuote from './DailyQuote.astro';
+import DateDisplay from './DateDisplay.astro';
+import WeatherWidget from './WeatherWidget.astro';
 
 const hero = siteConfig.hero;
 const weatherCity = hero?.weatherCity || 'Shenzhen';
-const quotesJson = JSON.stringify(quotes);
 ---
 
 {
@@ -23,164 +24,17 @@ const quotesJson = JSON.stringify(quotes);
                     />
                 )}
                 <div class="flex flex-col gap-4 mt-2 sm:mt-6">
-                    {hero.name && <h1 class="text-4xl sm:text-5xl font-serif font-bold leading-tight tracking-tight">{hero.name}</h1>}
-                    {hero.bio && <p class="text-base sm:text-xl leading-relaxed opacity-80 max-w-2xl">{hero.bio}</p>}
-                    {/* Date / Weather inline */}
-                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-6 gap-y-3 mt-4 text-sm sm:text-base opacity-60 font-medium tracking-wide">
-                        <div class="flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="1.5"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                />
-                            </svg>
-                            <span id="solar-date">--</span>
-                        </div>
-                        <span class="hidden sm:inline opacity-30">|</span>
-                        <div class="flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="1.5"
-                                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                                />
-                            </svg>
-                            <span id="lunar-date">--</span>
-                        </div>
-                        <span class="hidden sm:inline opacity-30">|</span>
-                        <div class="flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="1.5"
-                                    d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
-                                />
-                            </svg>
-                            <span id="weather-info">天气加载中...</span>
-                        </div>
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-4 sm:gap-6">
+                        {hero.name && <h1 class="text-4xl sm:text-5xl font-serif font-bold leading-tight tracking-tight mt-1">{hero.name}</h1>}
+                        <WeatherWidget weatherCity={weatherCity} />
                     </div>
+
+                    {hero.bio && <p class="text-base sm:text-xl leading-relaxed opacity-80 max-w-2xl mt-2">{hero.bio}</p>}
+                    <DateDisplay />
                 </div>
             </div>
 
-            {/* Daily Quote Section - Sketch Style Background */}
-            <div
-                class="relative overflow-hidden rounded-2xl p-10 sm:p-14 border border-main/10 dark:border-main/5 bg-transparent w-full transition-colors duration-300"
-                id="quote-container"
-            >
-                {/* SVG Sketch Pattern Background (Diagonal Hatching) */}
-                <div class="absolute inset-0 z-0 pointer-events-none opacity-[0.08] dark:opacity-[0.05] text-gray-500 dark:text-main">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <pattern id="sketch-lines" width="12" height="12" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-                                <path d="M 0 0 L 0 12" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="square" />
-                            </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#sketch-lines)" />
-                    </svg>
-                    {/* Focal fade mask for the pattern */}
-                    <div class="absolute inset-0 bg-gradient-to-tr from-transparent to-black/[0.03] dark:to-main/10 rounded-2xl mix-blend-overlay" />
-                </div>
-
-                {/* Content */}
-                <div class="relative z-10 flex flex-col items-center text-center">
-                    <svg class="w-8 h-8 opacity-20 mb-6 text-main transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                    </svg>
-                    <blockquote
-                        class="font-serif italic text-2xl sm:text-3xl leading-relaxed sm:leading-loose text-main/90 max-w-3xl transition-colors duration-300 px-4"
-                        id="daily-quote"
-                    >
-                        <span id="quote-text">...</span>
-                    </blockquote>
-                    <footer class="mt-8 pt-4 sm:pt-6 border-t border-main/10 w-24 mx-auto text-sm sm:text-base font-medium opacity-60 tracking-[0.2em] uppercase text-main transition-colors duration-300">
-                        <cite id="quote-author" />
-                    </footer>
-                </div>
-            </div>
-
+            <DailyQuote />
         </section>
     )
 }
-
-<script define:vars={{ quotesJson, weatherCity }}>
-    const quotes = JSON.parse(quotesJson);
-
-    function initHero() {
-        initDate();
-        initQuote();
-        initWeather();
-    }
-
-    // === Date & Lunar Calendar ===
-    function initDate() {
-        const now = new Date();
-        const solarEl = document.getElementById('solar-date');
-        const lunarEl = document.getElementById('lunar-date');
-        if (!solarEl || !lunarEl) return;
-
-        const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-        solarEl.textContent = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 星期${weekdays[now.getDay()]}`;
-
-        try {
-            const lunarStr = new Intl.DateTimeFormat('zh-CN-u-ca-chinese', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            }).format(now);
-            lunarEl.textContent = `农历 ${lunarStr}`;
-        } catch {
-            lunarEl.textContent = '';
-        }
-    }
-
-    // === Weather (wttr.in, free, no API key) ===
-    function initWeather() {
-        const el = document.getElementById('weather-info');
-        if (!el) return;
-
-        const cached = sessionStorage.getItem('weather-cache');
-        if (cached) {
-            try {
-                const data = JSON.parse(cached);
-                if (Date.now() - data.ts < 1800000) {
-                    el.textContent = data.text;
-                    return;
-                }
-            } catch {}
-        }
-
-        fetch(`https://wttr.in/${weatherCity}?format=%t+%C&lang=zh`)
-            .then((res) => res.text())
-            .then((text) => {
-                const result = `${text.trim()} · ${weatherCity}`;
-                el.textContent = result;
-                sessionStorage.setItem('weather-cache', JSON.stringify({ text: result, ts: Date.now() }));
-            })
-            .catch(() => {
-                el.textContent = `${weatherCity}`;
-            });
-    }
-
-    // === Daily Quote (same quote per day) ===
-    function initQuote() {
-        const textEl = document.getElementById('quote-text');
-        const authorEl = document.getElementById('quote-author');
-        if (!textEl || !authorEl || !quotes.length) return;
-
-        const today = new Date();
-        const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-        const index = seed % quotes.length;
-        const quote = quotes[index];
-
-        textEl.textContent = `「${quote.text}」`;
-        authorEl.textContent = quote.author;
-    }
-
-    // Init on page load (supports Astro view transitions)
-    initHero();
-    document.addEventListener('astro:page-load', initHero);
-</script>

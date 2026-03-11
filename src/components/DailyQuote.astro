@@ -1,0 +1,66 @@
+---
+// DailyQuote.astro
+import quotes from '../data/quotes';
+const quotesJson = JSON.stringify(quotes);
+---
+
+{/* Daily Quote Section - Sketch Style Background */}
+<div
+    class="relative overflow-hidden rounded-2xl p-10 sm:p-14 border border-main/10 dark:border-main/5 bg-transparent w-full transition-colors duration-300 mt-0"
+    id="quote-container"
+>
+    {/* SVG Sketch Pattern Background (Diagonal Hatching) */}
+    <div class="absolute inset-0 z-0 pointer-events-none opacity-[0.08] dark:opacity-[0.05] text-gray-500 dark:text-main">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="sketch-lines" width="12" height="12" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                    <path d="M 0 0 L 0 12" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="square"></path>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#sketch-lines)"></rect>
+        </svg>
+        {/* Focal fade mask for the pattern */}
+        <div class="absolute inset-0 bg-gradient-to-tr from-transparent to-black/[0.03] dark:to-main/10 rounded-2xl mix-blend-overlay"></div>
+    </div>
+
+    {/* Content */}
+    <div class="relative z-10 flex flex-col items-center text-center">
+        <svg class="w-8 h-8 opacity-20 mb-6 text-main transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
+            <path
+                d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"
+            ></path>
+        </svg>
+        <blockquote
+            class="font-serif italic text-2xl sm:text-3xl leading-relaxed sm:leading-loose text-main/90 max-w-3xl transition-colors duration-300 px-4"
+            id="daily-quote"
+        >
+            <span id="quote-text">...</span>
+        </blockquote>
+        <footer
+            class="mt-8 pt-4 sm:pt-6 border-t border-main/10 w-24 mx-auto text-sm sm:text-base font-medium opacity-60 tracking-[0.2em] uppercase text-main transition-colors duration-300"
+        >
+            <cite id="quote-author"></cite>
+        </footer>
+    </div>
+</div>
+
+<script define:vars={{ quotesJson }}>
+    const quotes = JSON.parse(quotesJson);
+
+    function initQuote() {
+        const textEl = document.getElementById('quote-text');
+        const authorEl = document.getElementById('quote-author');
+        if (!textEl || !authorEl || !quotes.length) return;
+
+        const today = new Date();
+        const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+        const index = seed % quotes.length;
+        const quote = quotes[index];
+
+        textEl.textContent = `「${quote.text}」`;
+        authorEl.textContent = quote.author;
+    }
+
+    initQuote();
+    document.addEventListener('astro:page-load', initQuote);
+</script>
