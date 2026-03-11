@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import heroAvatarImg from '../assets/hero.png';
 import siteConfig from '../data/site-config';
 import DailyQuote from './DailyQuote.astro';
 import DateDisplay from './DateDisplay.astro';
@@ -14,13 +16,14 @@ const weatherCity = hero?.weatherCity || 'Shenzhen';
             {/* Profile Section */}
             <div class="flex flex-col sm:flex-row items-center sm:items-start gap-8 sm:gap-12 text-center sm:text-left">
                 {hero.avatar?.src && (
-                    <img
+                    <Image
                         class="w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover shrink-0 shadow-lg border-4 border-transparent dark:border-main/5 transition-transform hover:scale-105 duration-700"
-                        src={hero.avatar.src}
+                        src={heroAvatarImg}
                         alt={hero.avatar.alt || ''}
-                        width="144"
-                        height="144"
+                        width={144}
+                        height={144}
                         loading="eager"
+                        format="webp"
                     />
                 )}
                 <div class="flex flex-col gap-4 mt-2 sm:mt-6">
