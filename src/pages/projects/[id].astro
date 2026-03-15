@@ -1,7 +1,10 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
-import ProjectPreview from '../../components/ProjectPreview.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Comments from '../../components/Comments.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import ProjectPreview from '../../components/ProjectPreview.astro';
+import ViewCount from '../../components/ViewCount.astro';
 import { sortItemsByDateDesc } from '../../utils/data-utils';
 
 export async function getStaticPaths() {
@@ -24,7 +27,7 @@ type Props = {
 };
 
 const { project, prevProject, nextProject } = Astro.props;
-const { title, description, demoUrl, repoUrl, seo } = project.data;
+const { title, description, publishDate, demoUrl, repoUrl, seo } = project.data;
 const { Content } = await render(project);
 ---
 
@@ -32,6 +35,10 @@ const { Content } = await render(project);
     <article class="mb-16 sm:mb-24">
         <header class="mb-8">
             <h1 class="text-3xl leading-tight font-serif font-medium sm:text-5xl sm:leading-tight">{title}</h1>
+            <div class="mt-4 flex items-center gap-4 text-sm text-main/50">
+                {publishDate && <FormattedDate date={publishDate} />}
+                <ViewCount slug={project.id} contentType="project" />
+            </div>
             {
                 (demoUrl || repoUrl) && (
                     <div class="mt-4 flex flex-wrap gap-4 text-sm">
@@ -63,6 +70,9 @@ const { Content } = await render(project);
             <Content />
         </div>
     </article>
+
+    <Comments slug={project.id} contentType="project" />
+
     {
         (prevProject || nextProject) && (
             <div class="my-16 sm:my-24">

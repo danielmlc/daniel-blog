@@ -2,9 +2,10 @@
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/Button.astro';
+import Comments from '../../components/Comments.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import PostPreview from '../../components/PostPreview.astro';
-import Subscribe from '../../components/Subscribe.astro';
+import ViewCount from '../../components/ViewCount.astro';
 import { sortItemsByDateDesc } from '../../utils/data-utils';
 import { slugify } from '../../utils/common-utils';
 
@@ -33,18 +34,14 @@ const { Content } = await render(post);
     <article class="mb-16 sm:mb-24">
         <header class="mb-8">
             <h1 class="text-3xl leading-tight font-serif font-medium sm:text-5xl sm:leading-tight">{title}</h1>
-            <div class="mt-4 text-sm">
+            <div class="mt-4 flex items-center gap-4 text-sm text-main/50">
                 <FormattedDate date={publishDate} />
                 {
                     updatedDate && (
-                        <>
-                            {' '}
-                            <span>
-                                (更新于 <FormattedDate date={updatedDate} />)
-                            </span>
-                        </>
+                        <span>(更新于 <FormattedDate date={updatedDate} />)</span>
                     )
                 }
+                <ViewCount slug={post.id} contentType="blog" />
             </div>
         </header>
         <div class="max-w-none prose sm:prose-lg">
@@ -55,7 +52,7 @@ const { Content } = await render(post);
                 tags.length > 0 && (
                     <div class="flex flex-wrap gap-x-5 gap-y-1 text-sm">
                         {tags.map((tag) => (
-                            <a class="text-main hover:underline" href={`/tags/${slugify(tag)}`}>
+                            <a class="text-main hover:underline" href={`/tags/blog/${slugify(tag)}`}>
                                 #{tag}
                             </a>
                         ))}
@@ -65,6 +62,9 @@ const { Content } = await render(post);
             <Button class="copy-url-button" aria-label="复制链接" data-url={href} data-tooltip-default="复制链接" data-tooltip-success="已复制">分享</Button>
         </div>
     </article>
+
+    <Comments slug={post.id} contentType="blog" />
+
     {
         (prevPost || nextPost) && (
             <div class="my-16 sm:my-24">
@@ -74,7 +74,7 @@ const { Content } = await render(post);
             </div>
         )
     }
-    <Subscribe class="my-16 sm:my-24" />
+
 </BaseLayout>
 
 <script>

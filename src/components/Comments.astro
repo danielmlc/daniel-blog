@@ -1,0 +1,251 @@
+---
+interface Props {
+    slug: string;
+    contentType: 'blog' | 'news' | 'project';
+}
+
+const { slug, contentType } = Astro.props;
+const apiBase = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:3021/api';
+---
+
+<section class="comments-section mt-16 sm:mt-24" data-slug={slug} data-type={contentType} data-api={apiBase}>
+    <h2 class="text-xl font-serif font-medium sm:text-2xl mb-8">评论</h2>
+
+    <!-- 评论列表 -->
+    <div class="comments-list space-y-6 mb-12">
+        <p class="comments-empty text-main/40 text-sm">加载中…</p>
+    </div>
+
+    <!-- 提交表单 -->
+    <form class="comment-form space-y-4 border-t border-dashed border-main/15 pt-10">
+        <h3 class="comment-form-title text-base font-medium mb-6">发表评论</h3>
+        <!-- 回复提示 -->
+        <div class="comment-reply-hint hidden items-center gap-2 text-sm text-main/60 mb-2">
+            <span>回复</span>
+            <span class="reply-target-name font-medium text-main/80"></span>
+            <button type="button" class="cancel-reply text-red-400 hover:text-red-500 ml-1">&times; 取消</button>
+        </div>
+        <input type="hidden" name="parentId" value="" />
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+                <label class="block text-sm text-main/60 mb-1.5" for="comment-name">昵称 <span class="text-red-400">*</span></label>
+                <input
+                    id="comment-name"
+                    name="authorName"
+                    type="text"
+                    required
+                    maxlength="50"
+                    placeholder="你的昵称"
+                    class="w-full rounded-lg border border-main/20 bg-transparent px-3.5 py-2.5 text-sm outline-none focus:border-main/50 transition-colors"
+                />
+            </div>
+            <div>
+                <label class="block text-sm text-main/60 mb-1.5" for="comment-email">邮箱 <span class="text-main/30 text-xs">（可选，不公开）</span></label>
+                <input
+                    id="comment-email"
+                    name="authorEmail"
+                    type="email"
+                    placeholder="your@email.com"
+                    class="w-full rounded-lg border border-main/20 bg-transparent px-3.5 py-2.5 text-sm outline-none focus:border-main/50 transition-colors"
+                />
+            </div>
+        </div>
+        <div>
+            <label class="block text-sm text-main/60 mb-1.5" for="comment-content">内容 <span class="text-red-400">*</span></label>
+            <textarea
+                id="comment-content"
+                name="content"
+                required
+                minlength="2"
+                maxlength="1000"
+                rows="4"
+                placeholder="说点什么…（2 ~ 1000 字）"
+                class="w-full rounded-lg border border-main/20 bg-transparent px-3.5 py-2.5 text-sm outline-none focus:border-main/50 transition-colors resize-none"
+            ></textarea>
+        </div>
+        <div class="flex items-center gap-4">
+            <button
+                type="submit"
+                class="comment-submit inline-flex items-center justify-center px-6 py-2 font-serif leading-tight italic rounded-full border border-main transition cursor-pointer disabled:opacity-40 hover:opacity-80"
+                style="background-color: var(--text-main); color: var(--bg-main);"
+            >
+                提交评论
+            </button>
+            <p class="comment-msg text-sm hidden"></p>
+        </div>
+    </form>
+</section>
+
+<script>
+    document.addEventListener('astro:page-load', () => {
+        const section = document.querySelector<HTMLElement>('.comments-section');
+        if (!section) return;
+
+        const slug = section.dataset.slug!;
+        const type = section.dataset.type!;
+        const api = section.dataset.api!;
+
+        const listEl = section.querySelector<HTMLElement>('.comments-list')!;
+        const form = section.querySelector<HTMLFormElement>('.comment-form')!;
+        const formTitle = form.querySelector<HTMLElement>('.comment-form-title')!;
+        const submitBtn = form.querySelector<HTMLButtonElement>('.comment-submit')!;
+        const msgEl = form.querySelector<HTMLElement>('.comment-msg')!;
+        const replyHint = form.querySelector<HTMLElement>('.comment-reply-hint')!;
+        const replyTargetName = form.querySelector<HTMLElement>('.reply-target-name')!;
+        const cancelReplyBtn = form.querySelector<HTMLButtonElement>('.cancel-reply')!;
+        const parentIdInput = form.querySelector<HTMLInputElement>('input[name="parentId"]')!;
+
+        type Comment = { id: string; authorName: string; content: string; createdAt: string; parentId: string | null };
+
+        // ── 设置回复目标 ──
+        function setReplyTarget(commentId: string, authorName: string) {
+            parentIdInput.value = commentId;
+            replyTargetName.textContent = `@${authorName}`;
+            replyHint.classList.remove('hidden');
+            replyHint.classList.add('flex');
+            formTitle.textContent = '回复评论';
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            form.querySelector<HTMLTextAreaElement>('textarea')?.focus();
+        }
+
+        function clearReplyTarget() {
+            parentIdInput.value = '';
+            replyHint.classList.add('hidden');
+            replyHint.classList.remove('flex');
+            formTitle.textContent = '发表评论';
+        }
+
+        cancelReplyBtn.addEventListener('click', clearReplyTarget);
+
+        // ── 渲染单条评论 ──
+        function renderComment(c: Comment, replyToName?: string): HTMLElement {
+            const date = new Date(c.createdAt).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+            const isReply = !!replyToName;
+            const div = document.createElement('div');
+            div.className = isReply
+                ? 'pl-6 border-l-2 border-main/10 mt-4'
+                : 'border-b border-dashed border-main/10 pb-6 last:border-0';
+            div.dataset.commentId = c.id;
+            const replyTag = replyToName ? `<span class="text-main/40 text-xs">回复 @${escHtml(replyToName)}</span>` : '';
+            div.innerHTML = `
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="font-medium text-sm">${escHtml(c.authorName)}</span>
+                    ${replyTag}
+                    <span class="text-main/30 text-xs">${date}</span>
+                    <button type="button" class="reply-btn text-main/40 hover:text-main/70 text-xs ml-auto transition-colors">回复</button>
+                </div>
+                <p class="text-sm leading-relaxed text-main/80 whitespace-pre-wrap">${escHtml(c.content)}</p>
+            `;
+            div.querySelector('.reply-btn')!.addEventListener('click', () => {
+                setReplyTarget(c.id, c.authorName);
+            });
+            return div;
+        }
+
+        // ── 找到顶级祖先评论 ID ──
+        function findRootId(commentId: string, commentMap: Map<string, Comment>): string {
+            let current = commentMap.get(commentId);
+            while (current?.parentId && commentMap.has(current.parentId)) {
+                current = commentMap.get(current.parentId);
+            }
+            return current?.id ?? commentId;
+        }
+
+        // ── 加载评论 ──
+        async function loadComments() {
+            try {
+                const res = await fetch(`${api}/blog/comments/${type}/${slug}`);
+                const json = await res.json();
+                const comments: Comment[] = json.result ?? json;
+
+                listEl.innerHTML = '';
+                if (!comments.length) {
+                    listEl.innerHTML = '<p class="text-main/40 text-sm">暂无评论，来做第一个吧！</p>';
+                    return;
+                }
+
+                // 建立 ID → Comment 映射
+                const commentMap = new Map<string, Comment>();
+                for (const c of comments) commentMap.set(c.id, c);
+
+                // 所有回复都归到顶级祖先下
+                const topLevel: Comment[] = [];
+                const repliesMap: Record<string, Comment[]> = {};
+                for (const c of comments) {
+                    if (!c.parentId) {
+                        topLevel.push(c);
+                    } else {
+                        const rootId = findRootId(c.id, commentMap);
+                        (repliesMap[rootId] ??= []).push(c);
+                    }
+                }
+
+                topLevel.forEach((c) => {
+                    const el = renderComment(c);
+                    const replies = repliesMap[c.id];
+                    if (replies?.length) {
+                        const repliesContainer = document.createElement('div');
+                        repliesContainer.className = 'space-y-3 mt-3';
+                        replies.forEach((r) => {
+                            // 找到直接被回复的人的昵称
+                            const parentComment = commentMap.get(r.parentId!);
+                            const replyToName = parentComment?.authorName;
+                            repliesContainer.appendChild(renderComment(r, replyToName));
+                        });
+                        el.appendChild(repliesContainer);
+                    }
+                    listEl.appendChild(el);
+                });
+            } catch {
+                listEl.innerHTML = '<p class="text-main/40 text-sm">评论加载失败，请刷新重试。</p>';
+            }
+        }
+
+        // ── 提交评论 ──
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+            const payload: Record<string, string> = { slug, contentType: type, ...formData };
+            // 不发送空的 parentId
+            if (!payload.parentId) delete payload.parentId;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '提交中…';
+            msgEl.className = 'comment-msg text-sm hidden';
+
+            try {
+                const res = await fetch(`${api}/blog/comments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err?.message?.[0] ?? '提交失败');
+                }
+
+                form.reset();
+                clearReplyTarget();
+                showMsg('评论已发布！', 'ok');
+                await loadComments();
+            } catch (err: any) {
+                showMsg(err.message || '网络错误，请稍后重试。', 'err');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '提交评论';
+            }
+        });
+
+        function showMsg(text: string, type: 'ok' | 'err') {
+            msgEl.textContent = text;
+            msgEl.className = `comment-msg text-sm ${type === 'ok' ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`;
+        }
+
+        function escHtml(str: string) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        loadComments();
+    });
+</script>

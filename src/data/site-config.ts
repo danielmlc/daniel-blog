@@ -19,7 +19,6 @@ export type Hero = {
 export type Subscribe = {
     title?: string;
     text?: string;
-    formUrl: string;
 };
 
 export type SiteConfig = {
@@ -79,6 +78,10 @@ const siteConfig: SiteConfig = {
             href: '/about'
         },
         {
+            text: '邮箱订阅',
+            href: '/subscribe'
+        },
+        {
             text: 'RSS 订阅',
             href: '/rss.xml'
         }
@@ -105,7 +108,6 @@ const siteConfig: SiteConfig = {
     subscribe: {
         title: '订阅博客更新',
         text: '第一时间获取我的最新文章与动态，通过邮箱推送。',
-        formUrl: '#'
     },
     postsPerPage: 8,
     newsPerPage: 8,

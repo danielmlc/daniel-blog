@@ -1,7 +1,6 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
 import PostPreview from '../../../components/PostPreview.astro';
-import Subscribe from '../../../components/Subscribe.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getAllTags, getItemsByTag, sortItemsByDateDesc } from '../../../utils/data-utils';
 
@@ -29,5 +28,5 @@ const { tag, posts } = Astro.props;
         <p class="mt-3 text-sm text-main/50">共 {posts.length} 篇文章</p>
     </div>
     {posts.map((post) => <PostPreview post={post} class="mb-10 sm:mb-12" />)}
-    <Subscribe class="my-16 sm:my-24" />
+
 </BaseLayout>

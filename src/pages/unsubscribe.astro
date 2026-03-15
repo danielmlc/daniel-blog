@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const apiBase = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:3021/api';
+---
+
+<BaseLayout title="退订" description="退订博客邮箱通知" showHeader={false}>
+    <div class="unsubscribe-page min-h-[40vh] flex flex-col items-center justify-center text-center" data-api={apiBase}>
+        <div class="unsubscribe-loading">
+            <p class="text-main/50 text-sm">处理中…</p>
+        </div>
+        <div class="unsubscribe-result hidden">
+            <h1 class="text-2xl font-serif font-medium sm:text-3xl mb-4 unsubscribe-title"></h1>
+            <p class="text-sm text-main/50 unsubscribe-desc"></p>
+            <a href="/" class="inline-block mt-8 text-sm underline text-main/50 hover:text-main/80 transition-colors">返回首页</a>
+        </div>
+    </div>
+</BaseLayout>
+
+<script>
+    document.addEventListener('astro:page-load', () => {
+        const page = document.querySelector<HTMLElement>('.unsubscribe-page');
+        if (!page) return;
+
+        const api = page.dataset.api!;
+        const loading = page.querySelector<HTMLElement>('.unsubscribe-loading')!;
+        const result = page.querySelector<HTMLElement>('.unsubscribe-result')!;
+        const title = page.querySelector<HTMLElement>('.unsubscribe-title')!;
+        const desc = page.querySelector<HTMLElement>('.unsubscribe-desc')!;
+
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+
+        if (!token) {
+            showResult('无效的退订链接', '缺少退订令牌，请检查链接是否完整。');
+            return;
+        }
+
+        (async () => {
+            try {
+                const res = await fetch(`${api}/blog/unsubscribe?token=${encodeURIComponent(token)}`);
+                const json = await res.json();
+                const data = json.result ?? json;
+                showResult('退订成功', data.message || '您已成功退订，将不再收到邮件通知。');
+            } catch {
+                showResult('退订失败', '网络错误，请稍后重试。');
+            }
+        })();
+
+        function showResult(t: string, d: string) {
+            loading.classList.add('hidden');
+            result.classList.remove('hidden');
+            title.textContent = t;
+            desc.textContent = d;
+        }
+    });
+</script>

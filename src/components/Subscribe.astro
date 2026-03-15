@@ -1,19 +1,20 @@
 ---
 import siteConfig from '../data/site-config';
-import Button from './Button.astro';
 
 const subscribe = siteConfig.subscribe;
+const apiBase = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:3021/api';
 
 const { class: className } = Astro.props;
 ---
 
 {
-    subscribe?.formUrl && (
+    subscribe && (
         <section
             class:list={[
-                'px-8 py-12 flex flex-col items-center border border-dashed border-main/30 bg-main/5 text-center sm:px-12 sm:py-16 rounded-xl hover:border-main/50 transition-colors',
+                'subscribe-section px-8 py-12 flex flex-col items-center border border-dashed border-main/30 bg-main/5 text-center sm:px-12 sm:py-16 rounded-xl hover:border-main/50 transition-colors',
                 className
             ]}
+            data-api={apiBase}
         >
             {subscribe.title && (
                 <h2 class:list={['w-full max-w-xl text-2xl leading-tight font-serif font-medium sm:text-4xl', subscribe.text ? 'mb-4' : 'mb-8']}>
@@ -22,29 +23,78 @@ const { class: className } = Astro.props;
             )}
             {subscribe.text && <p class="w-full max-w-xl mb-8 text-sm leading-normal">{subscribe.text}</p>}
             <form
-                action={subscribe.formUrl}
-                method="post"
-                id="subscribe-form"
-                name="subscribe-form"
-                class="w-full max-w-xl flex flex-col gap-3.5 sm:flex-row"
-                target="_blank"
+                class="subscribe-form w-full max-w-xl flex flex-col gap-3.5 sm:flex-row"
             >
-                <label for="email" class="sr-only">
+                <label for="subscribe-email" class="sr-only">
                     电子邮箱
                 </label>
                 <input
                     type="email"
                     name="email"
-                    id="email"
+                    id="subscribe-email"
                     class="w-full h-9 px-5 py-2 text-sm text-main bg-transparent border border-main rounded-full placeholder:text-main/60 focus:outline-hidden"
-                    required=""
-                    value=""
+                    required
                     placeholder="您的邮箱地址"
                 />
-                <Button type="submit" name="subscribe" class="w-full h-9 sm:w-auto">
+                <button
+                    type="submit"
+                    class="subscribe-btn inline-flex items-center justify-center w-full h-9 sm:w-auto px-6 font-serif leading-tight italic rounded-full border border-main transition cursor-pointer disabled:opacity-40 hover:opacity-80 shrink-0"
+                    style="background-color: var(--text-main); color: var(--bg-main);"
+                >
                     订阅
-                </Button>
+                </button>
             </form>
+            <p class="subscribe-msg text-sm mt-4 hidden"></p>
         </section>
     )
 }
+
+<script>
+    document.addEventListener('astro:page-load', () => {
+        const section = document.querySelector<HTMLElement>('.subscribe-section');
+        if (!section) return;
+
+        const api = section.dataset.api!;
+        const form = section.querySelector<HTMLFormElement>('.subscribe-form')!;
+        const btn = form.querySelector<HTMLButtonElement>('.subscribe-btn')!;
+        const msgEl = section.querySelector<HTMLElement>('.subscribe-msg')!;
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = (form.querySelector<HTMLInputElement>('input[name="email"]')!).value.trim();
+            if (!email) return;
+
+            btn.disabled = true;
+            btn.textContent = '提交中…';
+            msgEl.className = 'subscribe-msg text-sm mt-4 hidden';
+
+            try {
+                const res = await fetch(`${api}/blog/subscribe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email }),
+                });
+
+                const json = await res.json();
+                const data = json.result ?? json;
+
+                if (!res.ok) {
+                    throw new Error(data?.message ?? '订阅失败');
+                }
+
+                form.reset();
+                showMsg(data.message || '订阅成功！', 'ok');
+            } catch (err: any) {
+                showMsg(err.message || '网络错误，请稍后重试。', 'err');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '订阅';
+            }
+        });
+
+        function showMsg(text: string, type: 'ok' | 'err') {
+            msgEl.textContent = text;
+            msgEl.className = `subscribe-msg text-sm mt-4 ${type === 'ok' ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`;
+        }
+    });
+</script>

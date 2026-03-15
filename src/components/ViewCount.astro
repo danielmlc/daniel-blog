@@ -1,0 +1,47 @@
+---
+interface Props {
+    slug: string;
+    contentType: 'blog' | 'news' | 'project';
+    class?: string;
+}
+
+const { slug, contentType, class: className } = Astro.props;
+const apiBase = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:3021/api';
+---
+
+<span class:list={['view-count inline-flex items-center gap-1 text-sm text-main/40', className]} data-slug={slug} data-type={contentType} data-api={apiBase}>
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+    </svg>
+    <span class="view-count-num">--</span>
+</span>
+
+<script>
+    document.addEventListener('astro:page-load', () => {
+        document.querySelectorAll<HTMLElement>('.view-count').forEach(async (el) => {
+            const slug = el.dataset.slug!;
+            const type = el.dataset.type!;
+            const api = el.dataset.api!;
+            const numEl = el.querySelector('.view-count-num')!;
+            const key = `viewed:${type}:${slug}`;
+
+            try {
+                // 每个 slug 只计一次，避免刷新重复累加
+                if (!sessionStorage.getItem(key)) {
+                    const res = await fetch(`${api}/blog/views/${type}/${slug}`, { method: 'POST' });
+                    const json = await res.json();
+                    const count = json.result?.count ?? json.count;
+                    sessionStorage.setItem(key, '1');
+                    numEl.textContent = count;
+                } else {
+                    const res = await fetch(`${api}/blog/views/${type}/${slug}`);
+                    const json = await res.json();
+                    const count = json.result?.count ?? json.count;
+                    numEl.textContent = count;
+                }
+            } catch {
+                numEl.textContent = '--';
+            }
+        });
+    });
+</script>

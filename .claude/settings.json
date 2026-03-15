@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find c:/work/project/agent-admin/libs -name bootstrap.ts -o -name *.ts)",
+      "Bash(npm run:*)",
+      "Bash(find /c/work/project/agent-admin -path \"*/node_modules\" -prune -o -name \"*.ts\" -type f -exec grep -l \"class Result\\\\|interface Result\\\\|type Result\" {})"
+    ],
+    "additionalDirectories": [
+      "c:\\work\\project\\agent-admin"
+    ]
+  }
+}
